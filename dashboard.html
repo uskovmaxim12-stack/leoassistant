@@ -483,5 +483,79 @@
 </div>
         }
     </style>
+    <!-- index.html - ДОБАВЬ ПЕРЕД </body> -->
+<script src="js/main.js"></script>
+<script>
+// Инициализация загрузки
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Leo Assistant загружается...');
+    
+    // Анимация прогресс-бара
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 2;
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+                // Плавное скрытие загрузочного экрана
+                setTimeout(() => {
+                    const loadingScreen = document.querySelector('.loading-screen');
+                    if (loadingScreen) {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                        }, 500);
+                    }
+                }, 300);
+            }
+        }, 50);
+    }
+    
+    // Активация кнопки "Старт обучения"
+    const startBtn = document.querySelector('.start-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', function() {
+            console.log('Переход на dashboard...');
+            window.location.href = 'dashboard.html';
+        });
+    }
+    
+    // Активация выбора роли
+    document.querySelectorAll('.role-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const role = this.getAttribute('data-role');
+            console.log('Выбрана роль:', role);
+            localStorage.setItem('userRole', role);
+            localStorage.setItem('isLoggedIn', 'true');
+            window.location.href = 'dashboard.html';
+        });
+    });
+    
+    // Обработка формы входа
+    const loginForm = document.querySelector('form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = this.querySelector('input[type="text"]').value;
+            const password = this.querySelector('input[type="password"]').value;
+            
+            if (username && password) {
+                console.log('Вход пользователя:', username);
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('userRole', 'student');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Введите логин и пароль!');
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
