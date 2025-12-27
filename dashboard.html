@@ -11,6 +11,32 @@
     <script src="js/game-system.js"></script>
 <script src="js/neural-network.js"></script>
 <script src="js/dashboard.js"></script>
+    <script src="js/main.js"></script>
+<script>
+    // Инициализация прогресс-бара
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // Показываем основной контент
+                    setTimeout(() => {
+                        document.querySelector('.loading-screen').style.opacity = '0';
+                        setTimeout(() => {
+                            document.querySelector('.loading-screen').style.display = 'none';
+                        }, 500);
+                    }, 500);
+                }
+            }, 100);
+        }
+    });
+</script>
 <body>
     <script>
         // Проверка авторизации
