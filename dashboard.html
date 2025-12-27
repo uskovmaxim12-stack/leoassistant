@@ -557,5 +557,73 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+    <!-- dashboard.html - ДОБАВЬ ПЕРЕД </body> -->
+<script src="js/game-system.js"></script>
+<script src="js/neural-network.js"></script>
+<script>
+// Инициализация dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard загружен');
+    
+    // Проверяем авторизацию
+    if (!localStorage.getItem('isLoggedIn')) {
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    // Загружаем игровую систему
+    if (window.GameSystem) {
+        const game = window.GameSystem;
+        const stats = game.getStats();
+        
+        // Обновляем статистику
+        const pointsEl = document.getElementById('userPoints');
+        const levelEl = document.getElementById('userLevel');
+        
+        if (pointsEl) pointsEl.textContent = stats.points;
+        if (levelEl) levelEl.textContent = stats.level;
+        
+        // Показываем достижения
+        const achievementsContainer = document.getElementById('achievementsList');
+        if (achievementsContainer && stats.achievements.length > 0) {
+            achievementsContainer.innerHTML = stats.achievements
+                .slice(0, 3)
+                .map(ach => `
+                    <div class="achievement-item">
+                        <span class="achievement-icon">${ach.icon}</span>
+                        <div>
+                            <strong>${ach.name}</strong><br>
+                            <small>${ach.description}</small>
+                        </div>
+                    </div>
+                `).join('');
+        }
+        
+        // Ежедневный бонус
+        game.checkDailyLogin();
+    }
+    
+    // Навигация
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const page = this.getAttribute('data-page');
+            if (page) {
+                window.location.href = page;
+            }
+        });
+    });
+    
+    // Кнопка "Получить очки"
+    const pointsBtn = document.querySelector('.get-points-btn');
+    if (pointsBtn) {
+        pointsBtn.addEventListener('click', function() {
+            if (window.GameSystem) {
+                window.GameSystem.addPoints(50, 'Активность в системе');
+                location.reload(); // Обновляем страницу
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
