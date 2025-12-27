@@ -1,0 +1,45 @@
+{
+  "name": "Leo Assistant",
+  "short_name": "Leo",
+  "description": "Умный помощник для учёбы и саморазвития",
+  "start_url": "/leoassistant/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#3b82f6",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Новый вопрос к AI",
+      "short_name": "Спросить",
+      "description": "Задать вопрос Leo Assistant",
+      "url": "/leoassistant/neuro-assistant.html?action=ask"
+    },
+    {
+      "name": "Мои задания",
+      "short_name": "Задания",
+      "description": "Посмотреть домашние задания",
+      "url": "/leoassistant/homework.html"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
