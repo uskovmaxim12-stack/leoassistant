@@ -1,84 +1,204 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo Assistant - Вход</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Leo Assistant - умный помощник для учёбы. Объединяем все образовательные инструменты в одном месте.">
+    <meta name="keywords" content="образование, помощник, школа, AI, обучение, 7 класс, домашние задания">
+    <meta property="og:title" content="Leo Assistant - Ваш умный помощник в учёбе">
+    <meta property="og:description" content="Всё для учёбы в одном месте: AI-ассистент, задания, расписание, друзья и многое другое.">
+    <meta property="og:image" content="https://uskovmaxim12-stack.github.io/leoassistant/og-image.jpg">
+    
+    <title>Leo Assistant 🤖 | Умный помощник для учёбы</title>
+    
+    <!-- Иконки для всех платформ -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Основные стили -->
+    <link rel="stylesheet" href="css/core.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Шрифты -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA мета-теги -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
-<body class="login-page">
-    <div class="login-container">
-        <div class="login-header">
-            <div class="logo">
-                <i class="fas fa-robot"></i>
-                <h1>LEO ASSISTANT</h1>
-            </div>
-            <p class="subtitle">7Б КЛАСС • ВЕРСИЯ 1.5</p>
-        </div>
-
-        <div class="login-form">
-            <h2>ВХОД В СИСТЕМУ</h2>
-
-            <div class="form-group">
-                <label for="username">
-                    <i class="fas fa-user"></i> ИМЯ ПОЛЬЗОВАТЕЛЯ
-                </label>
-                <input type="text" id="username" placeholder="Усков Максим" required>
-                <small class="hint">Фамилия и Имя</small>
-            </div>
-
-            <div class="form-group">
-                <label for="password">
-                    <i class="fas fa-lock"></i> ПАРОЛЬ
-                </label>
-                <input type="password" id="password" placeholder="12345" required>
-                <small class="hint">5 цифр</small>
-            </div>
-
-            <button class="login-btn" onclick="login()">
-                <i class="fas fa-sign-in-alt"></i> ВОЙТИ В СИСТЕМУ →
-            </button>
-
-            <div class="login-footer">
-                <p><i class="fas fa-shield-alt"></i> Powered by 7B Class Tech</p>
-                <p class="version">v1.5 • Школьная сеть</p>
-            </div>
+<body>
+    <!-- Прелоадер -->
+    <div class="preloader" id="preloader">
+        <div class="neuro-loader">
+            <div class="neuron"></div>
+            <div class="neuron"></div>
+            <div class="neuron"></div>
+            <p>Загружаем интеллект... <span id="loadPercent">0%</span></p>
         </div>
     </div>
 
+    <!-- Основной контейнер -->
+    <div class="app-container" id="app">
+        <!-- Анимированный фон -->
+        <div class="animated-bg"></div>
+        
+        <!-- Страница входа (по умолчанию) -->
+        <div class="page active" id="login-page">
+            <div class="login-hero">
+                <div class="logo-container">
+                    <div class="logo-animated">
+                        <i class="fas fa-brain"></i>
+                        <div class="logo-text">
+                            <h1 class="gradient-text">LEO ASSISTANT</h1>
+                            <p class="tagline">Интеллектуальный спутник в мире знаний</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Основная форма входа -->
+                <div class="login-card glass">
+                    <h2><i class="fas fa-sign-in-alt"></i> Вход в систему</h2>
+                    
+                    <div class="input-group">
+                        <label for="login-input">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Имя, ID или Email</span>
+                        </label>
+                        <input type="text" id="login-input" 
+                               placeholder="Максим Усков / 30683 / ваш@email.com"
+                               autocomplete="username"
+                               aria-label="Логин пользователя">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            <span>Пароль</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" 
+                                   placeholder="Введите пароль"
+                                   autocomplete="current-password"
+                                   aria-label="Пароль пользователя">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="remember" checked>
+                            <span>Запомнить меня</span>
+                        </label>
+                        <a href="#" class="forgot-link" onclick="showForgotPassword()">Забыли пароль?</a>
+                    </div>
+                    
+                    <button class="btn-primary btn-lg btn-block" onclick="performLogin()">
+                        <i class="fas fa-rocket"></i> Старт обучения
+                    </button>
+                    
+                    <div class="divider">
+                        <span>или продолжить как</span>
+                    </div>
+                    
+                    <div class="quick-options">
+                        <button class="btn-ghost" onclick="quickLogin('student')">
+                            <i class="fas fa-user-graduate"></i> Ученик
+                        </button>
+                        <button class="btn-ghost" onclick="quickLogin('teacher')">
+                            <i class="fas fa-chalkboard-teacher"></i> Учитель
+                        </button>
+                        <button class="btn-ghost" onclick="quickLogin('parent')">
+                            <i class="fas fa-user-friends"></i> Родитель
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Информационная панель -->
+                <div class="info-panel glass">
+                    <h3><i class="fas fa-bolt"></i> Что нового в Leo 2.0?</h3>
+                    <div class="features-grid">
+                        <div class="feature">
+                            <i class="fas fa-robot"></i>
+                            <span>Умный AI с эмоциями</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Игровое обучение</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Идеально для телефона</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-cloud"></i>
+                            <span>Работает офлайн</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Футер -->
+            <footer class="site-footer">
+                <p>© 2024 Leo Assistant. Образовательная платформа нового поколения</p>
+                <div class="footer-links">
+                    <a href="#" onclick="showPage('about')">О проекте</a>
+                    <a href="#" onclick="showPage('privacy')">Конфиденциальность</a>
+                    <a href="#" onclick="showPage('contact')">Контакты</a>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Другие страницы (скрыты) -->
+        <div class="page" id="register-page">
+            <!-- Страница регистрации -->
+        </div>
+        
+        <div class="page" id="forgot-page">
+            <!-- Восстановление пароля -->
+        </div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    
+    <!-- Скрипты -->
+    <script src="js/config.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/offline.js"></script>
+    <script src="js/pwa.js"></script>
+    
     <script>
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Демо-доступ
-            if ((username === 'Усков Максим' || username === 'максим' || username === '30683') && 
-                password === '12345') {
-                // Сохраняем в localStorage
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('username', 'Усков Максим');
-                localStorage.setItem('userId', '30683');
-                
-                // Переходим на дашборд
-                window.location.href = 'dashboard.html';
-            } else {
-                alert('Неверный логин или пароль! Демо доступ: логин - Усков Максим, пароль - 12345');
-            }
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            checkFirstVisit();
+            setupServiceWorker();
+            simulateLoading();
+        });
+        
+        function simulateLoading() {
+            let percent = 0;
+            const interval = setInterval(() => {
+                percent += 1;
+                document.getElementById('loadPercent').textContent = percent + '%';
+                if (percent >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('preloader').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('preloader').style.display = 'none';
+                        }, 300);
+                    }, 300);
+                }
+            }, 20);
         }
-
-        // Добавить на Enter
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                login();
-            }
-        });
-
-        // Автозаполнение для демо
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('username').value = 'Усков Максим';
-            document.getElementById('password').value = '12345';
-        });
     </script>
 </body>
 </html>
