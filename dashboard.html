@@ -432,6 +432,25 @@
         </div>
     </div>
 </div>
+        <!-- dashboard.html - ДОБАВЬ В <head> -->
+<link rel="stylesheet" href="css/game-styles.css">
+<script src="js/dashboard.js" defer></script>
+        <!-- dashboard.html - ДОБАВЬ В ТЕЛО СТРАНИЦЫ -->
+<div class="level-progress-container">
+    <div class="level-progress" style="width: 10%">100/1000</div>
+</div>
+
+<div class="action-buttons">
+    <button class="game-btn get-points-btn">
+        <i class="fas fa-coins"></i> Получить 50 очков
+    </button>
+    <button class="game-btn secondary" onclick="window.location.href='assistant.html'">
+        <i class="fas fa-robot"></i> Поговорить с Лео
+    </button>
+    <button class="game-btn" onclick="window.location.href='achievements.html'">
+        <i class="fas fa-trophy"></i> Все достижения
+    </button>
+</div>
         }
     </style>
 </body>
