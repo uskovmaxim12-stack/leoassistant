@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroLeo Assistant 🤖 | Leo Assistant</title>
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="../css/core.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Нейро-стили -->
+    <style>
+        .neuro-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Заголовок */
+        .neuro-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .neuro-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .neuro-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .neuro-info h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .neuro-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Контейнер чата */
+        .neuro-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+        
+        @media (max-width: 1024px) {
+            .neuro-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+        
+        /* Боковая панель */
+        .neuro-sidebar {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            border: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        
+        .personality-selector {
+            margin-bottom: 30px;
+        }
+        
+        .personality-selector h3 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        
+        .personality-options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .personality-option {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .personality-option:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .personality-option.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--primary);
+        }
+        
+        /* Статистика */
+        .neuro-stats {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        /* Быстрые вопросы */
+        .quick-questions h3 {
+            margin-bottom: 15px;
+        }
+        
+        .question-chip {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 0 10px 10px 0;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            color: var(--primary-light);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+        
+        .question-chip:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Основной чат */
+        .neuro-chat {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 15px;
+            max-width: 80%;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            color: white;
+        }
+        
+        .message-content {
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .message.user .message-content {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-top-right-radius: 0;
+        }
+        
+        .message.ai .message-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-top-left-radius: 0;
+        }
+        
+        .message-text {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .message-category {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+        
+        /* Ввод сообщения */
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .input-container textarea {
+            flex: 1;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            min-height: 60px;
+            max-height: 120px;
+        }
+        
+        .input-container textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            width: 60px;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition);
+        }
+        
+        .action-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* Анимации для сообщений */
+        @keyframes typing {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 20px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Эмоциональный индикатор */
+        .emotion-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .neuro-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .neuro-title {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .input-container {
+                flex-direction: column;
+            }
+            
+            .send-button {
+                width: 100%;
+                height: 50px;
+            }
+        }
+        
+        /* Тематические цвета для категорий */
+        .category-math { color: #6366f1; }
+        .category-russian { color: #3b82f6; }
+        .category-history { color: #f59e0b; }
+        .category-science { color: #10b981; }
+        .category-english { color: #ec4899; }
+    </style>
+</head>
+<body>
+    <!-- Прелоадер -->
+    <div class="preloader" id="preloader">
+        <div class="neuro-loader">
+            <div class="neuron"></div>
+            <div class="neuron"></div>
+            <div class="neuron"></div>
+            <p>Загружаем интеллект NeuroLeo... <span id="loadPercent">0%</span></p>
+        </div>
+    </div>
+
+    <!-- Основной контейнер -->
+    <div class="app-container">
+        <!-- Кнопка назад -->
+        <div class="back-button">
+            <a href="dashboard.html" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> На главную
+            </a>
+        </div>
+
+        <!-- Страница нейро-ассистента -->
+        <div class="page active neuro-page" id="neuro-page">
+            <!-- Заголовок -->
+            <div class="neuro-header">
+                <div class="neuro-title">
+                    <div class="neuro-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="neuro-info">
+                        <h1 class="gradient-text">NeuroLeo Assistant</h1>
+                        <div class="neuro-status">
+                            <span class="status-dot"></span>
+                            <span id="currentPersonality">Помощный учитель</span>
+                            •
+                            <span id="currentEmotion" class="emotion-indicator">
+                                <span id="emotionEmoji">😌</span>
+                                <span id="emotionText">Спокойный</span>
+                            </span>
+                            •
+                            <span id="knowledgeCount">Загружено знаний: 0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="neuro-actions">
+                    <button class="btn-secondary" onclick="exportConversation()">
+                        <i class="fas fa-download"></i> Экспорт
+                    </button>
+                    <button class="btn-secondary" onclick="clearConversation()">
+                        <i class="fas fa-trash"></i> Очистить
+                    </button>
+                    <button class="btn-primary" onclick="showNeuroSettings()">
+                        <i class="fas fa-cog"></i> Настройки
+                    </button>
+                </div>
+            </div>
+
+            <!-- Основной контейнер -->
+            <div class="neuro-container">
+                <!-- Боковая панель -->
+                <div class="neuro-sidebar">
+                    <!-- Выбор личности -->
+                    <div class="personality-selector">
+                        <h3><i class="fas fa-mask"></i> Личность AI</h3>
+                        <div class="personality-options" id="personalityOptions">
+                            <!-- Опции будут добавлены через JS -->
+                        </div>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="neuro-stats">
+                        <h3><i class="fas fa-chart-bar"></i> Статистика</h3>
+                        <div class="stat-item">
+                            <span>Всего диалогов:</span>
+                            <span id="totalDialogs">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Сегодня:</span>
+                            <span id="todayDialogs">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Уверенность:</span>
+                            <span id="confidenceLevel">85%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Обучение:</span>
+                            <span id="learningProgress">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Быстрые вопросы -->
+                    <div class="quick-questions">
+                        <h3><i class="fas fa-bolt"></i> Быстрые вопросы</h3>
+                        <div id="quickQuestions">
+                            <div class="question-chip" onclick="askQuestion('Что такое теорема Пифагора?')">
+                                Теорема Пифагора
+                            </div>
+                            <div class="question-chip" onclick="askQuestion('Как решать квадратные уравнения?')">
+                                Квадратные уравнения
+                            </div>
+                            <div class="question-chip" onclick="askQuestion('Объясни правление Петра I')">
+                                Петр I
+                            </div>
+                            <div class="question-chip" onclick="askQuestion('Что такое фотосинтез?')">
+                                Фотосинтез
+                            </div>
+                            <div class="question-chip" onclick="askQuestion('Правила русского языка')">
+                                Русский язык
+                            </div>
+                            <div class="question-chip" onclick="askQuestion('Как учить английские слова?')">
+                                Английские слова
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Категории знаний -->
+                    <div class="knowledge-categories" style="margin-top: 30px;">
+                        <h3><i class="fas fa-book"></i> База знаний</h3>
+                        <div id="knowledgeCategories">
+                            <!-- Категории будут добавлены через JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Основной чат -->
+                <div class="neuro-chat">
+                    <!-- Заголовок чата -->
+                    <div class="chat-header">
+                        <div>
+                            <h3><i class="fas fa-comments"></i> Диалог с NeuroLeo</h3>
+                            <p class="text-muted" id="conversationInfo">Начните диалог, задав вопрос</p>
+                        </div>
+                        <div class="chat-controls">
+                            <button class="btn-secondary" onclick="toggleVoice()" id="voiceToggle">
+                                <i class="fas fa-microphone"></i> Голос
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Сообщения -->
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Приветственное сообщение -->
+                        <div class="message ai">
+                            <div class="message-avatar">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    Привет! Я NeuroLeo — твой интеллектуальный помощник в учёбе. 🤖
+                                    <br><br>
+                                    Я могу помочь с любым школьным предметом: объяснить тему, решить задачу, 
+                                    подготовиться к контрольной или просто поговорить об учёбе.
+                                    <br><br>
+                                    Задай мне вопрос или выбери быстрый вопрос слева!
+                                </div>
+                                <div class="message-meta">
+                                    <span class="message-category">👋 Приветствие</span>
+                                    <span>Только что</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Индикатор набора -->
+                    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <span style="margin-left: 10px; color: var(--text-secondary);">
+                            NeuroLeo думает...
+                        </span>
+                    </div>
+
+                    <!-- Ввод сообщения -->
+                    <div class="chat-input">
+                        <div class="input-container">
+                            <textarea 
+                                id="messageInput" 
+                                placeholder="Задайте вопрос по любому предмету..."
+                                rows="1"
+                                onkeydown="handleInputKeydown(event)"
+                            ></textarea>
+                            <button class="send-button" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="input-actions">
+                            <button class="action-button" onclick="insertExample()">
+                                <i class="fas fa-magic"></i> Пример вопроса
+                            </button>
+                            <button class="action-button" onclick="explainLastAnswer()">
+                                <i class="fas fa-question-circle"></i> Объясни подробнее
+                            </button>
+                            <button class="action-button" onclick="showLearningTips()">
+                                <i class="fas fa-lightbulb"></i> Советы по учёбе
+                            </button>
+                            <button class="action-button" onclick="toggleEmotionDisplay()">
+                                <i class="fas fa-smile"></i> Эмоции: Вкл
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div class="modal" id="neuroSettingsModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> Настройки NeuroLeo</h3>
+                <button class="modal-close" onclick="closeNeuroSettings()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>🧠 Настройки обучения</h4>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="autoLearn" checked>
+                            Автоматическое обучение
+                        </label>
+                        <small>NeuroLeo будет учиться на ваших вопросах</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Скорость обучения</label>
+                        <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.01">
+                        <small>Текущая: <span id="learningRateValue">0.01</span></small>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>💾 Управление знаниями</h4>
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="exportKnowledge()">
+                            <i class="fas fa-download"></i> Экспорт базы знаний
+                        </button>
+                        <button class="btn-secondary" onclick="importKnowledge()">
+                            <i class="fas fa-upload"></i> Импорт базы знаний
+                        </button>
+                        <button class="btn-danger" onclick="resetKnowledge()">
+                            <i class="fas fa-trash"></i> Сбросить знания
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>📊 Статистика</h4>
+                    <div id="detailedStats">
+                        <!-- Статистика будет загружена здесь -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeNeuroSettings()"></div>
+
+    <!-- Скрипты -->
+    <script src="../js/config.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/neuro.js"></script>
+    
+    <script>
+        // Инициализация
+        let neuroLeo;
+        let conversation = [];
+        let voiceEnabled = false;
+        let speechSynthesis = window.speechSynthesis;
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Инициализация приложения
+            if (!window.leoApp) {
+                window.leoApp = initApp();
+            }
+            
+            // Инициализация NeuroLeo
+            neuroLeo = initNeuroLeo();
+            
+            // Загрузка интерфейса
+            await initNeuroInterface();
+            
+            // Загрузка сохранённого диалога
+            loadSavedConversation();
+            
+            // Скрытие прелоадера
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 300);
+            }, 500);
+            
+            // Фокус на поле ввода
+            setTimeout(() => {
+                document.getElementById('messageInput').focus();
+            }, 1000);
+        });
+        
+        async function initNeuroInterface() {
+            // Заполняем опции личности
+            const personalities = [
+                { id: 'helpful_teacher', name: '👨‍🏫 Помощный учитель', desc: 'Терпеливый и объясняющий' },
+                { id: 'funny_friend', name: '😄 Весёлый друг', desc: 'Дружелюбный и с юмором' },
+                { id: 'strict_professor', name: '👓 Строгий профессор', desc: 'Точный и академичный' },
+                { id: 'motivator', name: '🚀 Мотиватор', desc: 'Вдохновляющий и энергичный' }
+            ];
+            
+            const optionsContainer = document.getElementById('personalityOptions');
+            personalities.forEach(personality => {
+                const option = document.createElement('div');
+                option.className = 'personality-option';
+                option.innerHTML = `
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <strong>${personality.name}</strong>
+                        <small>${personality.desc}</small>
+                    </div>
+                `;
+                option.onclick = () => changePersonality(personality.id);
+                optionsContainer.appendChild(option);
+            });
+            
+            // Обновляем статистику
+            updateStatistics();
+            
+            // Обновляем категории знаний
+            updateKnowledgeCategories();
+        }
+        
+        function updateStatistics() {
+            if (!neuroLeo) return;
+            
+            const stats = neuroLeo.getStatistics();
+            
+            document.getElementById('knowledgeCount').textContent = 
+                `Загружено знаний: ${stats.totalKnowledge}`;
+            document.getElementById('totalDialogs').textContent = stats.totalConversations;
+            document.getElementById('confidenceLevel').textContent = '85%';
+            
+            // Обновляем текущую личность и эмоцию
+            document.getElementById('currentPersonality').textContent = stats.personality;
+            document.getElementById('emotionEmoji').textContent = 
+                neuroLeo.emotions[stats.emotion].emoji;
+            document.getElementById('emotionText').textContent = 
+                this.getEmotionText(stats.emotion);
+        }
+        
+        function getEmotionText(emotion) {
+            const emotions = {
+                'calm': 'Спокойный',
+                'happy': 'Радостный',
+                'excited': 'Взволнованный',
+                'thoughtful': 'Задумчивый',
+                'concerned': 'Озабоченный'
+            };
+            return emotions[emotion] || 'Нейтральный';
+        }
+        
+        function updateKnowledgeCategories() {
+            if (!neuroLeo) return;
+            
+            const stats = neuroLeo.getStatistics();
+            const categoriesContainer = document.getElementById('knowledgeCategories');
+            categoriesContainer.innerHTML = '';
+            
+            for (const [category, count] of Object.entries(stats.categories)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'stat-item';
+                categoryDiv.innerHTML = `
+                    <span class="category-${category.toLowerCase().replace(' ', '-')}">${category}:</span>
+                    <span>${count}</span>
+                `;
+                categoriesContainer.appendChild(categoryDiv);
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Очищаем поле ввода
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Добавляем сообщение пользователя в чат
+            addMessageToChat(message, 'user');
+            
+            // Показываем индикатор набора
+            document.getElementById('typingIndicator').style.display = 'flex';
+            
+            try {
+                // Получаем ответ от NeuroLeo
+                const response = await askNeuroLeo(message);
+                
+                // Скрываем индикатор набора
+                document.getElementById('typingIndicator').style.display = 'none';
+                
+                // Добавляем ответ в чат
+                addMessageToChat(response.text, 'ai', {
+                    category: response.category,
+                    confidence: response.confidence,
+                    emotion: response.emotion,
+                    emoji: response.emoji
+                });
+                
+                // Сохраняем в историю
+                conversation.push({
+                    user: message,
+                    ai: response,
+                    timestamp: Date.now()
+                });
+                
+                // Сохраняем в localStorage
+                saveConversation();
+                
+                // Обновляем статистику
+                updateStatistics();
+                
+                // Озвучиваем ответ если включено
+                if (voiceEnabled) {
+                    speakText(response.text);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка получения ответа:', error);
+                document.getElementById('typingIndicator').style.display = 'none';
+                
+                addMessageToChat(
+                    'Извините, произошла ошибка. Пожалуйста, попробуйте ещё раз.',
+                    'ai',
+                    { category: 'Ошибка', confidence: 0 }
+                );
+            }
+        }
+        
+        function addMessageToChat(text, sender, metadata = {}) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const timestamp = new Date().toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            let categoryBadge = '';
+            if (metadata.category && metadata.category !== 'Общее') {
+                const categoryClass = `category-${metadata.category.toLowerCase().replace(' ', '-')}`;
+                categoryBadge = `<span class="message-category ${categoryClass}">${metadata.category}</span>`;
+            }
+            
+            let emotionBadge = '';
+            if (metadata.emotion && metadata.emoji) {
+                emotionBadge = `<span style="margin-left: 10px;">${metadata.emoji}</span>`;
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-${sender === 'user' ? 'user' : 'brain'}"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-text">${text}</div>
+                    <div class="message-meta">
+                        ${categoryBadge}
+                        ${emotionBadge}
+                        <span>${timestamp}</span>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            
+            // Прокрутка вниз
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Обновляем информацию о диалоге
+            updateConversationInfo();
+        }
+        
+        function updateConversationInfo() {
+            const info = document.getElementById('conversationInfo');
+            if (conversation.length > 0) {
+                info.textContent = `Диалогов: ${conversation.length} • Последний: ${new Date().toLocaleTimeString('ru-RU')}`;
+            }
+        }
+        
+        function askQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+        
+        function changePersonality(personalityType) {
+            if (!neuroLeo) return;
+            
+            // Обновляем активную опцию
+            document.querySelectorAll('.personality-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.closest('.personality-option').classList.add('active');
+            
+            // Меняем личность
+            const newPersonality = changeNeuroPersonality(personalityType);
+            
+            // Добавляем сообщение о смене личности
+            addMessageToChat(
+                `Переключился в режим "${newPersonality.name}"! ${newPersonality.emoji}`,
+                'ai',
+                { category: 'Система' }
+            );
+            
+            // Обновляем интерфейс
+            document.getElementById('currentPersonality').textContent = newPersonality.name;
+        }
+        
+        function toggleVoice() {
+            voiceEnabled = !voiceEnabled;
+            const button = document.getElementById('voiceToggle');
+            
+            if (voiceEnabled) {
+                button.innerHTML = '<i class="fas fa-microphone-slash"></i> Голос';
+                button.classList.add('active');
+                addMessageToChat('Голосовой режим включен 🔊', 'ai', { category: 'Система' });
+            } else {
+                button.innerHTML = '<i class="fas fa-microphone"></i> Голос';
+                button.classList.remove('active');
+                speechSynthesis.cancel();
+                addMessageToChat('Голосовой режим выключен 🔇', 'ai', { category: 'Система' });
+            }
+        }
+        
+        function speakText(text) {
+            if (!speechSynthesis || !voiceEnabled) return;
+            
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            speechSynthesis.speak(utterance);
+        }
+        
+        function handleInputKeydown(event) {
+            // Авторасширение текстового поля
+            const textarea = event.target;
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+            
+            // Отправка по Enter (без Shift)
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function insertExample() {
+            const examples = [
+                'Объясни теорему Пифагора простыми словами',
+                'Как решать задачи на проценты?',
+                'Расскажи о Великой Отечественной войне',
+                'Что такое фотосинтез и зачем он нужен?',
+                'Помоги с грамматикой английского языка'
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('messageInput').value = randomExample;
+            document.getElementById('messageInput').focus();
+        }
+        
+        function explainLastAnswer() {
+            if (conversation.length > 0) {
+                const lastQuestion = conversation[conversation.length - 1].user;
+                document.getElementById('messageInput').value = `Объясни подробнее: ${lastQuestion}`;
+                sendMessage();
+            } else {
+                addMessageToChat('Сначала задайте вопрос!', 'ai', { category: 'Система' });
+            }
+        }
+        
+        function showLearningTips() {
+            const tips = [
+                '🎯 Ставь конкретные цели на каждое занятие',
+                '⏰ Занимайся регулярно по 30-40 минут',
+                '📝 Делай короткие конспекты своими словами',
+                '🔄 Повторяй материал через день, неделю и месяц',
+                '❓ Не бойся задавать вопросы, если что-то непонятно',
+                '🎮 Используй игровые методы для запоминания',
+                '💤 Высыпайся — сон помогает закрепить знания',
+                '🚫 Убирай отвлекающие факторы во время учёбы'
+            ];
+            
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            addMessageToChat(randomTip, 'ai', { category: 'Советы' });
+        }
+        
+        function toggleEmotionDisplay() {
+            const button = event.target;
+            const messages = document.querySelectorAll('.message.ai .message-meta');
+            
+            messages.forEach(message => {
+                const emotionSpan = message.querySelector('span:nth-child(2)');
+                if (emotionSpan) {
+                    emotionSpan.style.display = 
+                        emotionSpan.style.display === 'none' ? 'inline' : 'none';
+                }
+            });
+            
+            button.innerHTML = button.innerHTML.includes('Вкл') ? 
+                '<i class="fas fa-smile"></i> Эмоции: Выкл' : 
+                '<i class="fas fa-smile"></i> Эмоции: Вкл';
+        }
+        
+        function exportConversation() {
+            const exportData = {
+                date: new Date().toISOString(),
+                conversation: conversation,
+                statistics: neuroLeo ? neuroLeo.getStatistics() : null
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `neuroleo-conversation-${Date.now()}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            addMessageToChat('Диалог экспортирован в JSON файл 📥', 'ai', { category: 'Система' });
+        }
+        
+        function clearConversation() {
+            if (confirm('Очистить всю историю диалога?')) {
+                conversation = [];
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                История диалога очищена. Задайте новый вопрос! 🔄
+                            </div>
+                            <div class="message-meta">
+                                <span class="message-category">Система</span>
+                                <span>Только что</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                localStorage.removeItem('neuroleo_conversation');
+                updateConversationInfo();
+            }
+        }
+        
+        function saveConversation() {
+            localStorage.setItem('neuroleo_conversation', JSON.stringify(conversation));
+        }
+        
+        function loadSavedConversation() {
+            const saved = localStorage.getItem('neuroleo_conversation');
+            if (saved) {
+                try {
+                    conversation = JSON.parse(saved);
+                    
+                    // Ограничиваем размер
+                    if (conversation.length > 20) {
+                        conversation = conversation.slice(-20);
+                    }
+                    
+                    // Восстанавливаем последние 5 сообщений
+                    const recent = conversation.slice(-5);
+                    recent.forEach(msg => {
+                        addMessageToChat(msg.user, 'user');
+                        addMessageToChat(msg.ai.text, 'ai', {
+                            category: msg.ai.category,
+                            confidence: msg.ai.confidence
+                        });
+                    });
+                    
+                } catch (error) {
+                    console.error('Ошибка загрузки диалога:', error);
+                }
+            }
+        }
+        
+        function showNeuroSettings() {
+            document.getElementById('neuroSettingsModal').classList.add('active');
+            document.getElementById('modalOverlay').style.display = 'block';
+            
+            // Обновляем детальную статистику
+            if (neuroLeo) {
+                const stats = neuroLeo.getStatistics();
+                const detailedStats = document.getElementById('detailedStats');
+                detailedStats.innerHTML = `
+                    <div class="stat-item"><span>Всего знаний:</span><span>${stats.totalKnowledge}</span></div>
+                    <div class="stat-item"><span>Всего диалогов:</span><span>${stats.totalConversations}</span></div>
+                    <div class="stat-item"><span>Размер памяти:</span><span>${stats.memorySize}</span></div>
+                    <div class="stat-item"><span>Текущая личность:</span><span>${stats.personality}</span></div>
+                    <div class="stat-item"><span>Эмоциональное состояние:</span><span>${stats.emotion}</span></div>
+                `;
+            }
+        }
+        
+        function closeNeuroSettings() {
+            document.getElementById('neuroSettingsModal').classList.remove('active');
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+        
+        function exportKnowledge() {
+            if (neuroLeo) {
+                const knowledge = exportNeuroKnowledge();
+                const dataStr = 'data:application/json;charset=utf-8,' + encodeURIComponent(knowledge);
+                const link = document.createElement('a');
+                link.setAttribute('href', dataStr);
+                link.setAttribute('download', `neuroleo-knowledge-${Date.now()}.json`);
+                link.click();
+                
+                addMessageToChat('База знаний экспортирована 🧠', 'ai', { category: 'Система' });
+            }
+        }
+        
+        function importKnowledge() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    if (importNeuroKnowledge(e.target.result)) {
+                        addMessageToChat('База знаний успешно загружена 📥', 'ai', { category: 'Система' });
+                        updateStatistics();
+                        updateKnowledgeCategories();
+                    } else {
+                        addMessageToChat('Ошибка загрузки базы знаний ❌', 'ai', { category: 'Система' });
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        function resetKnowledge() {
+            if (confirm('Вы уверены? Это сбросит все накопленные знания к базовым.')) {
+                if (neuroLeo) {
+                    neuroLeo.resetKnowledge();
+                    addMessageToChat('База знаний сброшена к базовой 🔄', 'ai', { category: 'Система' });
+                    updateStatistics();
+                    updateKnowledgeCategories();
+                }
+            }
+        }
+        
+        // Обновляем ползунок скорости обучения
+        document.getElementById('learningRate')?.addEventListener('input', function() {
+            document.getElementById('learningRateValue').textContent = this.value;
+            if (neuroLeo) {
+                neuroLeo.learningRate = parseFloat(this.value);
+            }
+        });
+    </script>
+</body>
+</html>
