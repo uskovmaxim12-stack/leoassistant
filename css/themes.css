@@ -1,0 +1,513 @@
+/* ===== СИСТЕМА ТЕМ ===== */
+
+/* Светлая тема */
+[data-theme="light"] {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-tertiary: #e2e8f0;
+    --bg-glass: rgba(248, 250, 252, 0.8);
+    
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+    
+    --border: #cbd5e1;
+    --border-light: #e2e8f0;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Темная тема (по умолчанию) */
+[data-theme="dark"] {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-glass: rgba(30, 41, 59, 0.8);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+    
+    --border: #475569;
+    --border-light: #64748b;
+}
+
+/* Космическая тема */
+[data-theme="space"] {
+    --primary: #8b5cf6;
+    --primary-dark: #7c3aed;
+    --primary-light: #a78bfa;
+    
+    --bg-primary: #0f0f23;
+    --bg-secondary: #1a1a2e;
+    --bg-tertiary: #2d2d44;
+    --bg-glass: rgba(26, 26, 46, 0.9);
+    
+    --text-primary: #e2e8f0;
+    --text-secondary: #a5b4cb;
+    --text-muted: #7c8ba0;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
+    
+    --border: #4a5568;
+    --border-light: #718096;
+}
+
+/* Оранжевая тема */
+[data-theme="orange"] {
+    --primary: #f97316;
+    --primary-dark: #ea580c;
+    --primary-light: #fb923c;
+    
+    --bg-primary: #1c1917;
+    --bg-secondary: #292524;
+    --bg-tertiary: #44403c;
+    --bg-glass: rgba(41, 37, 36, 0.9);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #e7e5e4;
+    --text-muted: #a8a29e;
+    
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+    
+    --border: #57534e;
+    --border-light: #78716c;
+}
+
+/* Розовая тема */
+[data-theme="pink"] {
+    --primary: #ec4899;
+    --primary-dark: #db2777;
+    --primary-light: #f472b6;
+    
+    --bg-primary: #1f1b2e;
+    --bg-secondary: #292344;
+    --bg-tertiary: #3a3159;
+    --bg-glass: rgba(41, 35, 68, 0.9);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #e2e8f0;
+    --text-muted: #94a3b8;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #06b6d4;
+    
+    --border: #4c4766;
+    --border-light: #665e8c;
+}
+
+/* Зеленая тема */
+[data-theme="green"] {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --primary-light: #34d399;
+    
+    --bg-primary: #0d1f1a;
+    --bg-secondary: #1a2f2a;
+    --bg-tertiary: #2d443f;
+    --bg-glass: rgba(26, 47, 42, 0.9);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #d1fae5;
+    --text-muted: #a7f3d0;
+    
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+    
+    --border: #374151;
+    --border-light: #4b5563;
+}
+
+/* Переключатель темы */
+.theme-switcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.theme-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.theme-button:hover {
+    transform: scale(1.1);
+    border-color: var(--primary);
+}
+
+.theme-panel {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    min-width: 200px;
+    box-shadow: var(--shadow-xl);
+}
+
+.theme-panel.active {
+    display: grid;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.theme-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all var(--transition);
+}
+
+.theme-option:hover {
+    transform: scale(1.1);
+}
+
+.theme-option.active {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 3px var(--primary);
+}
+
+/* Цвета для каждой темы */
+.theme-option[data-theme="dark"] {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.theme-option[data-theme="light"] {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+.theme-option[data-theme="space"] {
+    background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+}
+
+.theme-option[data-theme="orange"] {
+    background: linear-gradient(135deg, #1c1917, #292524);
+}
+
+.theme-option[data-theme="pink"] {
+    background: linear-gradient(135deg, #1f1b2e, #292344);
+}
+
+.theme-option[data-theme="green"] {
+    background: linear-gradient(135deg, #0d1f1a, #1a2f2a);
+}
+
+/* Адаптивность переключателя темы */
+@media (max-width: 768px) {
+    .theme-switcher {
+        bottom: 70px;
+        right: 10px;
+    }
+    
+    .theme-panel {
+        bottom: 70px;
+        right: -50px;
+    }
+}
+
+/* Плавный переход между темами */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Специфичные стили для тем */
+
+/* Светлая тема - особые стили */
+[data-theme="light"] .glass {
+    background: rgba(248, 250, 252, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .card,
+[data-theme="light"] .dashboard-card,
+[data-theme="light"] .admin-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border-light);
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border);
+}
+
+[data-theme="light"] .input-group input,
+[data-theme="light"] .form-control {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+/* Темная тема - особые стили */
+[data-theme="dark"] .animated-bg {
+    background: linear-gradient(45deg, 
+        #0f172a 0%, 
+        #1e293b 25%, 
+        #0f172a 50%, 
+        #1e293b 75%, 
+        #0f172a 100%);
+}
+
+/* Космическая тема - звездный фон */
+[data-theme="space"] .animated-bg {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+        linear-gradient(45deg, #0f0f23 0%, #1a1a2e 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+/* Индикатор текущей темы */
+.current-theme-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 15px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+}
+
+.current-theme-indicator::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+/* Анимация смены темы */
+.theme-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    animation: themeFade 0.5s ease;
+}
+
+@keyframes themeFade {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Стили для конкретных элементов в разных темах */
+
+/* Логотип в разных темах */
+[data-theme="light"] .gradient-text {
+    background: linear-gradient(135deg, var(--primary), #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="space"] .gradient-text {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-theme="orange"] .gradient-text {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Кнопки в разных темах */
+[data-theme="light"] .btn-primary {
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .btn-primary {
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="space"] .btn-primary {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+}
+
+/* Карточки в разных темах */
+[data-theme="light"] .card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="space"] .card:hover {
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+}
+
+/* Поля ввода в разных темах */
+[data-theme="light"] input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="space"] input:focus {
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+/* Анимации для конкретных тем */
+[data-theme="space"] .neuron {
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+[data-theme="orange"] .neuron {
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+}
+
+/* Утилитарные классы для тем */
+.theme-dark-bg {
+    background: var(--bg-primary) !important;
+}
+
+.theme-light-text {
+    color: var(--text-primary) !important;
+}
+
+.theme-accent-border {
+    border-color: var(--primary) !important;
+}
+
+/* Переопределения для системных сообщений */
+[data-theme="light"] .leo-toast {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .leo-toast {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid var(--border);
+}
+
+/* Адаптация прелоадера */
+[data-theme="light"] .preloader {
+    background: var(--bg-primary);
+}
+
+[data-theme="space"] .preloader {
+    background: var(--bg-primary);
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+}
+
+/* Переопределение для модальных окон */
+[data-theme="light"] .modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-light);
+}
+
+[data-theme="dark"] .modal-content {
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid var(--border);
+}
+
+/* Переопределение для боковой панели */
+[data-theme="light"] .sidebar {
+    background: rgba(241, 245, 249, 0.95);
+    border-right: 1px solid var(--border-light);
+}
+
+/* Переопределение для таблиц */
+[data-theme="light"] .admin-table th {
+    background: rgba(241, 245, 249, 0.8);
+    border-bottom: 2px solid var(--border);
+}
+
+/* Глобальные стили для всех тем */
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Плавность перехода для всех анимаций */
+.theme-transition * {
+    transition: none !important;
+}
