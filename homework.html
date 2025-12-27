@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Домашние задания - Leo Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <script>
+        // Проверка авторизации
+        if (!localStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    
+    <div class="dashboard-layout">
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">МУ</div>
+                    <div class="user-details">
+                        <h3>Максим Усков</h3>
+                        <div class="user-class">7Б КЛАСС</div>
+                        <div class="status-online">
+                            <span class="status-dot"></span>
+                            <span>ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-id">
+                    <small>ID: <strong>30683</strong></small>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i><span>Главная</span></a></li>
+                    <li class="nav-item"><a href="assistant.html" class="nav-link"><i class="fas fa-robot"></i><span>Лео Ассистент</span></a></li>
+                    <li class="nav-item"><a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i><span>Друзья</span></a></li>
+                    <li class="nav-item"><a href="schedule.html" class="nav-link"><i class="fas fa-calendar-alt"></i><span>Расписание</span></a></li>
+                    <li class="nav-item"><a href="homework.html" class="nav-link active"><i class="fas fa-book"></i><span>Домашка</span></a></li>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fas fa-user-cog"></i><span>Мой профиль</span></a></li>
+                    <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-shield-alt"></i><span>Админ</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="logout()" class="nav-link"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1><i class="fas fa-book"></i> Домашние задания</h1>
+                    <p class="subtitle">Активные задания и история выполнения</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="showAddHomework()">
+                        <i class="fas fa-plus"></i> Добавить задание
+                    </button>
+                </div>
+            </header>
+
+            <!-- ФИЛЬТРЫ -->
+            <div class="filters-card">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="pending">Активные</button>
+                    <button class="filter-btn" data-filter="completed">Выполненные</button>
+                    <button class="filter-btn" data-filter="overdue">Просроченные</button>
+                </div>
+                <div class="sort-options">
+                    <select id="sortSelect">
+                        <option value="date">По дате сдачи</option>
+                        <option value="subject">По предмету</option>
+                        <option value="priority">По приоритету</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- СПИСОК ЗАДАНИЙ -->
+            <div class="homework-list">
+                <!-- МАТЕМАТИКА -->
+                <div class="homework-card pending" data-subject="Математика">
+                    <div class="hw-header">
+                        <div class="hw-subject-badge math">
+                            <i class="fas fa-calculator"></i> Математика
+                        </div>
+                        <div class="hw-status pending">Активно</div>
+                    </div>
+                    <h3 class="hw-title">Дроби и их сокращение</h3>
+                    <p class="hw-description">
+                        Учебник стр. 45-48, упражнения 15-20. Решить все задачи, показать решение.
+                    </p>
+                    <div class="hw-details">
+                        <div class="hw-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>Сдать до: <strong>15 марта</strong></span>
+                        </div>
+                        <div class="hw-detail">
+                            <i class="fas fa-tasks"></i>
+                            <span>6 задач</span>
+                        </div>
+                        <div class="hw-detail">
+                            <i class="fas fa-user"></i>
+                            <span>От: Лео</span>
+                        </div>
+                    </div>
+                    <div class="hw-actions">
+                        <button class="hw-action-btn complete" onclick="completeHomework(1)">
+                            <i class="fas fa-check"></i> Отметить выполненным
+                        </button>
+                        <button class="hw-action-btn" onclick="askForHelp(1)">
+                            <i class="fas fa-question-circle"></i> Попросить помощь
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ИСТОРИЯ -->
+                <div class="homework-card completed" data-subject="История">
+                    <div class="hw-header">
+                        <div class="hw-subject-badge history">
+                            <i class="fas fa-landmark"></i> История
+                        </div>
+                        <div class="hw-status completed">Выполнено</div>
+                    </div>
+                    <h3 class="hw-title">Петр I и его реформы</h3>
+                    <p class="hw-description">
+                        Подготовить доклад на 2 страницы о реформах Петра I.
+                    </p>
+                    <div class="hw-details">
+                        <div class="hw-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>Сдано: <strong>10 марта</strong></span>
+                        </div>
+                        <div class="hw-detail">
+                            <i class="fas fa-star"></i>
+                            <span>Оценка: <strong>5/5</strong></span>
+                        </div>
+                    </div>
+                    <div class="hw-completion">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Выполнено 10 марта в 18:30</span>
+                    </div>
+                </div>
+
+                <!-- РУССКИЙ ЯЗЫК -->
+                <div class="homework-card pending" data-subject="Русский язык">
+                    <div class="hw-header">
+                        <div class="hw-subject-badge russian">
+                            <i class="fas fa-language"></i> Русский язык
+                        </div>
+                        <div class="hw-status pending">Активно</div>
+                    </div>
+                    <h3 class="hw-title">Сложные предложения</h3>
+                    <p class="hw-description">
+                        Учебник стр. 78-82, упражнения 5-10. Составить 5 сложных предложений.
+                    </p>
+                    <div class="hw-details">
+                        <div class="hw-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>Сдать до: <strong>18 марта</strong></span>
+                        </div>
+                        <div class="hw-detail">
+                            <i class="fas fa-tasks"></i>
+                            <span>15 упражнений</span>
+                        </div>
+                    </div>
+                    <div class="hw-actions">
+                        <button class="hw-action-btn complete" onclick="completeHomework(3)">
+                            <i class="fas fa-check"></i> Отметить выполненным
+                        </button>
+                        <a href="assistant.html" class="hw-action-btn">
+                            <i class="fas fa-robot"></i> Спросить Лео
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- СТАТИСТИКА -->
+            <div class="stats-card">
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Активных задания</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Выполнено</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Просрочено</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Успеваемость</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ -->
+    <div id="addHomeworkModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Добавить задание</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Предмет</label>
+                    <select id="subjectSelect">
+                        <option value="Математика">Математика</option>
+                        <option value="Русский язык">Русский язык</option>
+                        <option value="История">История</option>
+                        <option value="Физика">Физика</option>
+                        <option value="Биология">Биология</option>
+                        <option value="Английский язык">Английский язык</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Название задания</label>
+                    <input type="text" id="hwTitle" placeholder="Например: Дроби и их сокращение">
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="hwDescription" rows="3" placeholder="Подробное описание задания..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Дата сдачи</label>
+                    <input type="date" id="hwDueDate">
+                </div>
+                <div class="form-group">
+                    <label>Приоритет</label>
+                    <select id="hwPriority">
+                        <option value="low">Низкий</option>
+                        <option value="medium" selected>Средний</option>
+                        <option value="high">Высокий</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Отмена</button>
+                <button class="btn-primary" onclick="addHomework()">Добавить задание</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        }
+
+        // Фильтрация заданий
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const homeworkCards = document.querySelectorAll('.homework-card');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Убираем активный класс у всех кнопок
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Добавляем активный класс нажатой кнопке
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+
+                    // Показываем/скрываем карточки
+                    homeworkCards.forEach(card => {
+                        if (filter === 'all') {
+                            card.style.display = 'block';
+                        } else if (card.classList.contains(filter)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Сортировка
+            document.getElementById('sortSelect').addEventListener('change', (e) => {
+                sortHomework(e.target.value);
+            });
+
+            // Устанавливаем дату завтра по умолчанию
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('hwDueDate').valueAsDate = tomorrow;
+        });
+
+        function sortHomework(criteria) {
+            const container = document.querySelector('.homework-list');
+            const cards = Array.from(document.querySelectorAll('.homework-card'));
+
+            cards.sort((a, b) => {
+                if (criteria === 'subject') {
+                    return a.dataset.subject.localeCompare(b.dataset.subject);
+                }
+                return 0; // По дате уже отсортированы в HTML
+            });
+
+            // Очищаем и добавляем отсортированные карточки
+            container.innerHTML = '';
+            cards.forEach(card => container.appendChild(card));
+        }
+
+        function completeHomework(id) {
+            if (confirm('Отметить задание как выполненное?')) {
+                const card = document.querySelector(`[onclick="completeHomework(${id})"]`).closest('.homework-card');
+                card.classList.remove('pending');
+                card.classList.add('completed');
+
+                // Обновляем статус
+                const status = card.querySelector('.hw-status');
+                status.textContent = 'Выполнено';
+                status.className = 'hw-status completed';
+
+                // Обновляем действия
+                const actions = card.querySelector('.hw-actions');
+                if (actions) {
+                    actions.innerHTML = `
+                        <div class="hw-completion">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Выполнено сегодня в ${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                    `;
+                }
+
+                // Обновляем статистику
+                updateStats();
+
+                alert('Задание отмечено как выполненное! +50 очков ✈');
+            }
+        }
+
+        function askForHelp(id) {
+            const subject = prompt('В чем именно нужна помощь? (например: "не понимаю теорему Пифагора")');
+            if (subject) {
+                window.location.href = `assistant.html`;
+            }
+        }
+
+        function showAddHomework() {
+            document.getElementById('addHomeworkModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('addHomeworkModal').style.display = 'none';
+        }
+
+        function addHomework() {
+            const subject = document.getElementById('subjectSelect').value;
+            const title = document.getElementById('hwTitle').value;
+            const description = document.getElementById('hwDescription').value;
+            const dueDate = document.getElementById('hwDueDate').value;
+            const priority = document.getElementById('hwPriority').value;
+
+            if (!title || !description) {
+                alert('Заполните название и описание задания');
+                return;
+            }
+
+            // Создаем новую карточку
+            const homeworkList = document.querySelector('.homework-list');
+            const newCard = document.createElement('div');
+            newCard.className = `homework-card pending`;
+            newCard.dataset.subject = subject;
+            newCard.dataset.priority = priority;
+
+            const subjectColors = {
+                'Математика': 'math',
+                'Русский язык': 'russian',
+                'История': 'history',
+                'Физика': 'physics',
+                'Биология': 'biology',
+                'Английский язык': 'english'
+            };
+
+            const colorClass = subjectColors[subject] || 'math';
+
+            newCard.innerHTML = `
+                <div class="hw-header">
+                    <div class="hw-subject-badge ${colorClass}">
+                        <i class="fas fa-book"></i> ${subject}
+                    </div>
+                    <div class="hw-status pending">Активно</div>
+                </div>
+                <h3 class="hw-title">${title}</h3>
+                <p class="hw-description">${description}</p>
+                <div class="hw-details">
+                    <div class="hw-detail">
+                        <i class="fas fa-calendar"></i>
+                        <span>Сдать до: <strong>${dueDate}</strong></span>
+                    </div>
+                    <div class="hw-detail">
+                        <i class="fas fa-flag"></i>
+                        <span>Приоритет: ${priority === 'high' ? 'Высокий' : priority === 'medium' ? 'Средний' : 'Низкий'}</span>
+                    </div>
+                </div>
+                <div class="hw-actions">
+                    <button class="hw-action-btn complete" onclick="completeHomework(${Date.now()})">
+                        <i class="fas fa-check"></i> Отметить выполненным
+                    </button>
+                    <button class="hw-action-btn" onclick="askForHelp(${Date.now()})">
+                        <i class="fas fa-question-circle"></i> Попросить помощь
+                    </button>
+                </div>
+            `;
+
+            homeworkList.insertBefore(newCard, homeworkList.firstChild);
+            closeModal();
+            updateStats();
+
+            alert('Задание добавлено!');
+        }
+
+        function updateStats() {
+            const active = document.querySelectorAll('.homework-card.pending').length;
+            const completed = document.querySelectorAll('.homework-card.completed').length;
+
+            // Обновляем числа в статистике
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers[0].textContent = active;
+            statNumbers[1].textContent = completed;
+
+            const total = active + completed;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            statNumbers[3].textContent = percentage + '%';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('addHomeworkModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <style>
+        .filters-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .sort-options select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text);
+            min-width: 150px;
+        }
+
+        .homework-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .homework-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .homework-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .homework-card.completed {
+            opacity: 0.8;
+            border-color: var(--success);
+        }
+
+        .hw-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .hw-subject-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .hw-subject-badge.math { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+        .hw-subject-badge.history { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .hw-subject-badge.russian { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .hw-subject-badge.physics { background: rgba(14, 165, 233, 0.2); color: #0ea5e9; }
+        .hw-subject-badge.biology { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .hw-subject-badge.english { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+
+        .hw-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .hw-status.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .hw-status.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .hw-status.overdue { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        .hw-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--accent-light);
+        }
+
+        .hw-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .hw-details {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hw-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .hw-detail i {
+            color: var(--accent);
+        }
+
+        .hw-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .hw-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .hw-action-btn.complete {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .hw-action-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .hw-completion {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--success);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .stats-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        @media (max-width: 768px) {
+            .filters-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hw-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hw-actions {
+                flex-direction: column;
+            }
+
+            .stats-card {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</body>
+</html>

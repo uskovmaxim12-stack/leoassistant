@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание - Leo Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <script>
+        // Проверка авторизации
+        if (!localStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    
+    <div class="dashboard-layout">
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">МУ</div>
+                    <div class="user-details">
+                        <h3>Максим Усков</h3>
+                        <div class="user-class">7Б КЛАСС</div>
+                        <div class="status-online">
+                            <span class="status-dot"></span>
+                            <span>ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-id">
+                    <small>ID: <strong>30683</strong></small>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i><span>Главная</span></a></li>
+                    <li class="nav-item"><a href="assistant.html" class="nav-link"><i class="fas fa-robot"></i><span>Лео Ассистент</span></a></li>
+                    <li class="nav-item"><a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i><span>Друзья</span></a></li>
+                    <li class="nav-item"><a href="schedule.html" class="nav-link active"><i class="fas fa-calendar-alt"></i><span>Расписание</span></a></li>
+                    <li class="nav-item"><a href="homework.html" class="nav-link"><i class="fas fa-book"></i><span>Домашка</span></a></li>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fas fa-user-cog"></i><span>Мой профиль</span></a></li>
+                    <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-shield-alt"></i><span>Админ</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="logout()" class="nav-link"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1><i class="fas fa-calendar-alt"></i> Расписание 7Б класса</h1>
+                    <p class="subtitle">Актуальное расписание на текущую неделю</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="window.open('https://drive.google.com', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> Google Drive
+                    </button>
+                </div>
+            </header>
+
+            <!-- ДНИ НЕДЕЛИ -->
+            <div class="schedule-container">
+                <!-- ПОНЕДЕЛЬНИК -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Понедельник</h3>
+                        <span class="day-date">11 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject history">История</span>
+                            <span class="lesson-room">16 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject important">Разговоры о важном</span>
+                            <span class="lesson-room">21 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject biology">Биология</span>
+                            <span class="lesson-room">21 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject russian">Русский язык</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject labor">Труд</span>
+                            <span class="lesson-room">6 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">17:15-17:55</span>
+                            <span class="lesson-subject labor">Труд</span>
+                            <span class="lesson-room">6 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">18:00-18:40</span>
+                            <span class="lesson-subject literature">Литература</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ВТОРНИК -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Вторник</h3>
+                        <span class="day-date">12 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject informatics">Информатика-пл</span>
+                            <span class="lesson-room">42 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject history">История</span>
+                            <span class="lesson-room">16 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject art">ИЗО</span>
+                            <span class="lesson-room">6 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject algebra">Алгебра</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject russian">Русский язык</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">17:15-17:55</span>
+                            <span class="lesson-subject pe">Физ-ра</span>
+                            <span class="lesson-room">СЗ</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">18:00-18:40</span>
+                            <span class="lesson-subject geometry">Геометрия</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- СРЕДА -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Среда</h3>
+                        <span class="day-date">13 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject physics">Физика</span>
+                            <span class="lesson-room">35 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject history">История</span>
+                            <span class="lesson-room">16 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject pe">Физ-ра</span>
+                            <span class="lesson-room">СЗ</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject russian">Русский язык</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject physics">Физика</span>
+                            <span class="lesson-room">35 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">17:15-17:55</span>
+                            <span class="lesson-subject geography">География</span>
+                            <span class="lesson-room">22 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">18:00-18:40</span>
+                            <span class="lesson-subject russian">Русский язык-пл</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ЧЕТВЕРГ -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Четверг</h3>
+                        <span class="day-date">14 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject algebra">Алгебра</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject math">Вероятность и Статистика</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject english">Английский язык</span>
+                            <span class="lesson-room">12 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject geography">География</span>
+                            <span class="lesson-room">22 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject russian">Русский язык</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">17:15-17:55</span>
+                            <span class="lesson-subject literature">Литература</span>
+                            <span class="lesson-room">32 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">18:00-18:40</span>
+                            <span class="lesson-subject pe">Физ-ра</span>
+                            <span class="lesson-room">СЗ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ПЯТНИЦА -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Пятница</h3>
+                        <span class="day-date">15 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject algebra">Алгебра</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject english">Английский язык/Информатика</span>
+                            <span class="lesson-room">12 / 42</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject english">Английский язык</span>
+                            <span class="lesson-room">12 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject geometry">Геометрия</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject biology">Биология</span>
+                            <span class="lesson-room">21 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">17:15-17:55</span>
+                            <span class="lesson-subject informatics">Информатика/Английский язык</span>
+                            <span class="lesson-room">42 / 12</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">18:00-18:40</span>
+                            <span class="lesson-subject math">Математика-ВД</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- СУББОТА -->
+                <div class="day-card">
+                    <div class="day-header">
+                        <h3><i class="fas fa-calendar-day"></i> Суббота</h3>
+                        <span class="day-date">16 марта</span>
+                    </div>
+                    <div class="lessons-list">
+                        <div class="lesson-item">
+                            <span class="lesson-time">12:20-13:00</span>
+                            <span class="lesson-subject music">Музыка</span>
+                            <span class="lesson-room">АЗ</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">13:10-13:50</span>
+                            <span class="lesson-subject math">Математика-пл</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:00-14:40</span>
+                            <span class="lesson-subject chemistry">Химия</span>
+                            <span class="lesson-room">33 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">14:50-15:30</span>
+                            <span class="lesson-subject physics">Физика</span>
+                            <span class="lesson-room">35 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">15:40-16:20</span>
+                            <span class="lesson-subject math">Математика-ВД</span>
+                            <span class="lesson-room">34 каб</span>
+                        </div>
+                        <div class="lesson-item">
+                            <span class="lesson-time">16:30-17:10</span>
+                            <span class="lesson-subject physics">Физика-пл</span>
+                            <span class="lesson-room">35 каб</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ИНФОРМАЦИЯ -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-info-circle"></i> Информация</h3>
+                </div>
+                <div class="info-content">
+                    <p><i class="fas fa-exclamation-triangle"></i> Все изменения в расписании публикуются в Google Drive</p>
+                    <p><i class="fas fa-map-marker-alt"></i> СЗ - Спортивный зал, АЗ - Актовый зал</p>
+                    <p><i class="fas fa-book"></i> -пл означает практическое занятие, -ВД означает внеурочная деятельность</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        }
+
+        // Подсветка текущего дня
+        document.addEventListener('DOMContentLoaded', () => {
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const today = new Date().getDay();
+
+            // Если сегодня суббота или воскресенье - показываем понедельник
+            const showDay = today === 0 || today === 6 ? 1 : today;
+
+            const dayCards = document.querySelectorAll('.day-card');
+            if (dayCards[showDay - 1]) {
+                dayCards[showDay - 1].style.borderColor = 'var(--accent)';
+                dayCards[showDay - 1].style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.2)';
+            }
+        });
+    </script>
+
+    <style>
+        .schedule-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .day-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .day-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .day-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .lessons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lesson-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .lesson-time {
+            color: var(--text-secondary);
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .lesson-subject {
+            flex: 1;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+
+        .lesson-room {
+            color: var(--text-secondary);
+            width: 60px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Цвета предметов */
+        .history { color: #f59e0b; }
+        .important { color: #ef4444; }
+        .biology { color: #10b981; }
+        .russian { color: #3b82f6; }
+        .literature { color: #8b5cf6; }
+        .labor { color: #f97316; }
+        .informatics { color: #06b6d4; }
+        .art { color: #ec4899; }
+        .algebra { color: #6366f1; }
+        .geometry { color: #8b5cf6; }
+        .pe { color: #22c55e; }
+        .physics { color: #0ea5e9; }
+        .geography { color: #84cc16; }
+        .english { color: #f43f5e; }
+        .math { color: #a855f7; }
+        .music { color: #d946ef; }
+        .chemistry { color: #14b8a6; }
+
+        .info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: var(--text-secondary);
+        }
+
+        .info-content p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .schedule-container {
+                grid-template-columns: 1fr;
+            }
+
+            .lesson-item {
+                flex-wrap: wrap;
+            }
+
+            .lesson-time, .lesson-room {
+                width: auto;
+            }
+        }
+    </style>
+</body>
+</html>

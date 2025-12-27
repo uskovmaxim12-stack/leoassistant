@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лео Ассистент - Чат</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <script>
+        // Проверка авторизации
+        if (!localStorage.getItem('loggedIn')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    
+    <div class="dashboard-layout">
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <div class="user-avatar">МУ</div>
+                    <div class="user-details">
+                        <h3>Максим Усков</h3>
+                        <div class="user-class">7Б КЛАСС</div>
+                        <div class="status-online">
+                            <span class="status-dot"></span>
+                            <span>ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-id">
+                    <small>ID: <strong>30683</strong></small>
+                </div>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i><span>Главная</span></a></li>
+                    <li class="nav-item"><a href="assistant.html" class="nav-link active"><i class="fas fa-robot"></i><span>Лео Ассистент</span></a></li>
+                    <li class="nav-item"><a href="friends.html" class="nav-link"><i class="fas fa-user-friends"></i><span>Друзья</span></a></li>
+                    <li class="nav-item"><a href="schedule.html" class="nav-link"><i class="fas fa-calendar-alt"></i><span>Расписание</span></a></li>
+                    <li class="nav-item"><a href="homework.html" class="nav-link"><i class="fas fa-book"></i><span>Домашка</span></a></li>
+                    <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fas fa-user-cog"></i><span>Мой профиль</span></a></li>
+                    <li class="nav-item"><a href="admin.html" class="nav-link"><i class="fas fa-shield-alt"></i><span>Админ</span></a></li>
+                    <li class="nav-item"><a href="#" onclick="logout()" class="nav-link"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1><i class="fas fa-robot"></i> Лео Ассистент</h1>
+                    <p class="subtitle">Ваш интеллектуальный помощник по всем предметам</p>
+                </div>
+                <div class="assistant-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-brain"></i>
+                        <div>
+                            <div class="stat-value" id="aiVersion">v1.5</div>
+                            <div class="stat-label">Версия AI</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ЧАТ -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-info">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h3>Лео Ассистент</h3>
+                            <p class="status"><span class="online-dot"></span> В сети • Готов помочь</p>
+                        </div>
+                    </div>
+                    <button class="clear-chat" onclick="clearChat()">
+                        <i class="fas fa-trash"></i> Очистить чат
+                    </button>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Сообщения будут здесь -->
+                    <div class="message ai-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Привет! Я Лео - твой интеллектуальный помощник по учёбе! 🎓
+                                Я могу помочь с любым школьным предметом: математика, русский язык, история, физика и другие.
+                                Задай мне вопрос или попроси объяснить тему!
+                            </div>
+                            <div class="message-time">Только что</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <input type="text" 
+                               id="messageInput" 
+                               placeholder="Задайте вопрос по любому предмету..." 
+                               onkeypress="if(event.key === 'Enter') sendMessage()">
+                        <div class="input-actions">
+                            <button class="action-btn" title="Примеры вопросов" onclick="showExamples()">
+                                <i class="fas fa-lightbulb"></i>
+                            </button>
+                            <button class="send-btn" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i> Отправить
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="quick-questions">
+                        <small>Быстрые вопросы:</small>
+                        <button class="quick-question" onclick="askQuestion('Объясни теорему Пифагора')">
+                            Теорема Пифагора
+                        </button>
+                        <button class="quick-question" onclick="askQuestion('Что такое фотосинтез?')">
+                            Фотосинтез
+                        </button>
+                        <button class="quick-question" onclick="askQuestion('Правление Петра I')">
+                            Петр I
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-footer">
+                    <div class="disclaimer">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Лео может выдавать неверные ответы и ошибаться. Он ещё учится! 
+                        Всегда проверяй информацию перед использованием. 💡
+                    </div>
+                </div>
+            </div>
+
+            <!-- ИСТОРИЯ ВОПРОСОВ -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-history"></i> История вопросов
+                    </h3>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-item">
+                        <div class="history-question">
+                            <strong>Как решить квадратное уравнение?</strong>
+                            <span class="history-subject">Математика</span>
+                        </div>
+                        <div class="history-answer">
+                            Отличный вопрос! Давайте разберем его подробно...
+                        </div>
+                        <div class="history-time">
+                            Сегодня
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let chatHistory = JSON.parse(localStorage.getItem('leo_chat_history') || '[]');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadChatHistory();
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Добавляем сообщение пользователя
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Симуляция ответа AI
+            setTimeout(() => {
+                const responses = [
+                    "Отличный вопрос! Давайте разберем его подробно...",
+                    "Я помогу вам с этим! Сначала давайте уточним некоторые детали...",
+                    "Интересный вопрос! Вот что я могу сказать по этой теме...",
+                    "Это важная тема в школьной программе. Основные моменты:..."
+                ];
+
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addMessage(randomResponse + " Это демо-версия. В реальном проекте здесь будет ответ от DeepSeek API.", 'ai');
+
+                // Сохраняем в историю
+                saveToHistory(message, randomResponse);
+            }, 1000);
+        }
+
+        function addMessage(text, sender) {
+            const chat = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+
+            const time = new Date().toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="message-content user-content">
+                        <div class="message-text">${text}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                    <div class="message-avatar user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-text">${text}</div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+            }
+
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function askQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        function clearChat() {
+            if (confirm('Очистить всю историю чата?')) {
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="message ai-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Чат очищен. Задайте новый вопрос!
+                            </div>
+                            <div class="message-time">Только что</div>
+                        </div>
+                    </div>
+                `;
+
+                chatHistory = [];
+                localStorage.removeItem('leo_chat_history');
+                loadChatHistory();
+            }
+        }
+
+        function saveToHistory(question, answer) {
+            const historyItem = {
+                question,
+                answer,
+                timestamp: new Date().toISOString(),
+                subject: determineSubject(question)
+            };
+
+            chatHistory.unshift(historyItem);
+            if (chatHistory.length > 20) chatHistory.pop();
+
+            localStorage.setItem('leo_chat_history', JSON.stringify(chatHistory));
+            loadChatHistory();
+        }
+
+        function determineSubject(question) {
+            const subjects = {
+                'математик': 'Математика',
+                'алгебр': 'Алгебра',
+                'геометр': 'Геометрия',
+                'физик': 'Физика',
+                'хими': 'Химия',
+                'истори': 'История',
+                'русск': 'Русский язык',
+                'литератур': 'Литература',
+                'биолог': 'Биология',
+                'географи': 'География',
+                'английск': 'Английский язык'
+            };
+
+            question = question.toLowerCase();
+            for (const [key, subject] of Object.entries(subjects)) {
+                if (question.includes(key)) {
+                    return subject;
+                }
+            }
+            return 'Общий';
+        }
+
+        function loadChatHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+
+            if (chatHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">История вопросов пуста</p>';
+                return;
+            }
+
+            chatHistory.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div class="history-question">
+                        <strong>${item.question}</strong>
+                        <span class="history-subject">${item.subject}</span>
+                    </div>
+                    <div class="history-answer">
+                        ${item.answer.substring(0, 60)}...
+                    </div>
+                    <div class="history-time">
+                        ${new Date(item.timestamp).toLocaleDateString('ru-RU')}
+                    </div>
+                `;
+                historyList.appendChild(div);
+            });
+        }
+
+        function showExamples() {
+            const examples = [
+                "Объясни теорему Пифагора простыми словами",
+                "Как решить квадратное уравнение?",
+                "В чем разница между mitosis и meiosis?",
+                "Расскажи о Великой Отечественной войне",
+                "Помоги с грамматикой английского языка"
+            ];
+
+            alert("Примеры вопросов:\n\n" + examples.join("\n• "));
+        }
+
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <style>
+        .chat-container {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .online-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        .status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .clear-chat {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .clear-chat:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .ai-message {
+            flex-direction: row;
+        }
+
+        .user-message {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ai-message .message-avatar {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
+        }
+
+        .user-avatar {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        .message-content {
+            max-width: 70%;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .user-content {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .message-text {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 15px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .send-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 45px;
+            font-weight: 500;
+        }
+
+        .send-btn:hover {
+            background: #2563eb;
+        }
+
+        .quick-questions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-question {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-light);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .quick-question:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .chat-footer {
+            padding: 15px 20px;
+            background: rgba(245, 158, 11, 0.1);
+            border-top: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .disclaimer {
+            color: var(--warning);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-question {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .history-subject {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .history-answer {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .history-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .assistant-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .input-wrapper {
+                flex-direction: column;
+            }
+            
+            .quick-questions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</body>
+</html>

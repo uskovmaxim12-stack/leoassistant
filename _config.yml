@@ -1,0 +1,24 @@
+# _config.yml
+title: "Leo Assistant"
+description: "Образовательная платформа для 7Б класса"
+baseurl: "" # Оставь пустым
+url: "" # Оставь пустым, GitHub сам подставит
+theme: null
+
+# Отключаем обработку Jekyll (важно для Node.js проектов)
+safe: true
+include: ['.nojekyll']
+exclude: ['node_modules', '*.log']
+
+# Кодировка
+encoding: "UTF-8"
+lang: "ru-RU"
+
+# Настройки для GitHub Pages
+plugins:
+  - jekyll-feed
+
+# Дополнительные настройки
+markdown: kramdown
+highlighter: rouge
+future: true

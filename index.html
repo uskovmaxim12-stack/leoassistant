@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo Assistant - Вход</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>LEO ASSISTANT</h1>
+            </div>
+            <p class="subtitle">7Б КЛАСС • ВЕРСИЯ 1.5</p>
+        </div>
+
+        <div class="login-form">
+            <h2>ВХОД В СИСТЕМУ</h2>
+
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i> ИМЯ ПОЛЬЗОВАТЕЛЯ
+                </label>
+                <input type="text" id="username" placeholder="Усков Максим" required>
+                <small class="hint">Фамилия и Имя</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i> ПАРОЛЬ
+                </label>
+                <input type="password" id="password" placeholder="12345" required>
+                <small class="hint">5 цифр</small>
+            </div>
+
+            <button class="login-btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> ВОЙТИ В СИСТЕМУ →
+            </button>
+
+            <div class="login-footer">
+                <p><i class="fas fa-shield-alt"></i> Powered by 7B Class Tech</p>
+                <p class="version">v1.5 • Школьная сеть</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Демо-доступ
+            if ((username === 'Усков Максим' || username === 'максим' || username === '30683') && 
+                password === '12345') {
+                // Сохраняем в localStorage
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('username', 'Усков Максим');
+                localStorage.setItem('userId', '30683');
+                
+                // Переходим на дашборд
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Неверный логин или пароль! Демо доступ: логин - Усков Максим, пароль - 12345');
+            }
+        }
+
+        // Добавить на Enter
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Автозаполнение для демо
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').value = 'Усков Максим';
+            document.getElementById('password').value = '12345';
+        });
+    </script>
+</body>
+</html>
