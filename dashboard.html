@@ -3,118 +3,664 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo Assistant - Панель управления</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-</head>
-<body style="background: linear-gradient(135deg, #0f0c29, #302b63); color: white; padding: 20px;">
+    <title>Leo Assistant | Мой учебный портал</title>
     
-    <!-- Простой заголовок -->
-    <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="font-size: 3em; color: #00ff88;">🎉 Добро пожаловать в Leo Assistant!</h1>
-        <p style="font-size: 1.2em; color: #a0a0c0;">Панель управления успешно загружена.</p>
-    </div>
-
-    <!-- Информация о пользователе -->
-    <div id="user-info" style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px; max-width: 600px; margin: 0 auto 30px;">
-        <h2 style="color: #00ccff;"><i class="fas fa-user"></i> Ваш профиль</h2>
-        <p><strong>Имя:</strong> <span id="display-name">Загрузка...</span></p>
-        <p><strong>Класс:</strong> <span id="display-class">Загрузка...</span></p>
-        <p><strong>Статус:</strong> <span style="color: #00ff88;">Авторизован</span></p>
-    </div>
-
-    <!-- Панель действий -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto;">
-        <div style="background: rgba(0,255,136,0.1); padding: 25px; border-radius: 15px; border: 2px solid rgba(0,255,136,0.3);">
-            <h3 style="color: #00ff88;"><i class="fas fa-robot"></i> AI Помощник</h3>
-            <p>Задавайте вопросы по учебным предметам.</p>
-            <button onclick="askAI()" style="background: #00ff88; color: #0f0c29; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer;">Открыть чат</button>
-        </div>
+    <!-- Стили -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Быстрая загрузка */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         
-        <div style="background: rgba(102,126,234,0.1); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3);">
-            <h3 style="color: #667eea;"><i class="fas fa-tasks"></i> Задания</h3>
-            <p>Просмотр и выполнение домашних работ.</p>
-            <button onclick="showTasks()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer;">Посмотреть</button>
-        </div>
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Экран загрузки -->
+    <div id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p style="color: white; margin-top: 20px;">Загружаем ваш учебный портал...</p>
+    </div>
+    
+    <!-- Частицы -->
+    <div id="dashboard-particles"></div>
+    
+    <!-- Основной контейнер -->
+    <div class="dashboard-container" style="display: none;">
         
-        <div style="background: rgba(255,65,108,0.1); padding: 25px; border-radius: 15px; border: 2px solid rgba(255,65,108,0.3);">
-            <h3 style="color: #ff416c;"><i class="fas fa-sign-out-alt"></i> Выход</h3>
-            <p>Завершите текущую сессию.</p>
-            <button onclick="logout()" style="background: #ff416c; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 15px; cursor: pointer;">Выйти из системы</button>
-        </div>
+        <!-- Боковая панель -->
+        <aside class="dashboard-sidebar">
+            <!-- Профиль -->
+            <div class="user-profile">
+                <div class="user-avatar-large">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <h2 id="userDisplayName">Космонавт</h2>
+                <p id="userDisplayClass">7Б класс</p>
+                
+                <!-- Уровень -->
+                <div class="level-display">
+                    <div class="level-circle">
+                        <span id="userLevel">1</span>
+                    </div>
+                    <p>Уровень</p>
+                </div>
+            </div>
+            
+            <!-- Навигация -->
+            <nav class="dashboard-nav">
+                <a href="#dashboard" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Главная</span>
+                </a>
+                <a href="#ai" class="nav-item">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Помощник</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#tasks" class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Задания</span>
+                    <span class="nav-badge">5</span>
+                </a>
+                <a href="#games" class="nav-item">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Игры</span>
+                </a>
+                <a href="#progress" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Прогресс</span>
+                </a>
+                <a href="#class" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Наш класс</span>
+                </a>
+            </nav>
+            
+            <!-- Прогресс-бар -->
+            <div class="xp-container">
+                <div class="xp-header">
+                    <span>Опыт</span>
+                    <span id="xpText">0/500</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xpProgress"></div>
+                </div>
+            </div>
+            
+            <!-- Выход -->
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                Выйти
+            </button>
+        </aside>
+        
+        <!-- Основной контент -->
+        <main class="dashboard-main">
+            
+            <!-- Верхняя панель -->
+            <header class="dashboard-header">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Искать в Leo Assistant...">
+                </div>
+                
+                <div class="header-right">
+                    <!-- Очки полёта -->
+                    <div class="flight-points">
+                        <i class="fas fa-rocket"></i>
+                        <span id="flightPoints">1,000</span>
+                        <span class="points-label">очков</span>
+                    </div>
+                    
+                    <!-- Уведомления -->
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                    
+                    <!-- Достижения -->
+                    <button class="achievement-btn">
+                        <i class="fas fa-trophy"></i>
+                        <span id="achievementCount">5</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Приветствие -->
+            <section class="welcome-section">
+                <h1>Добро пожаловать, <span id="welcomeName">Космонавт</span>! 🚀</h1>
+                <p>Твой AI-помощник Leo готов помочь с учебой сегодня</p>
+            </section>
+            
+            <!-- Виджеты -->
+            <div class="widgets-grid">
+                
+                <!-- AI Помощник -->
+                <div class="widget ai-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-brain"></i> Leo Assistant</h3>
+                        <span class="status online">ОНЛАЙН</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <p class="ai-greeting">Привет! Чем могу помочь с уроками?</p>
+                        
+                        <div class="quick-questions">
+                            <button class="quick-question" data-question="Помоги с математикой">
+                                <i class="fas fa-calculator"></i> Математика
+                            </button>
+                            <button class="quick-question" data-question="Объясни физику">
+                                <i class="fas fa-atom"></i> Физика
+                            </button>
+                            <button class="quick-question" data-question="Помоги с русским">
+                                <i class="fas fa-language"></i> Русский
+                            </button>
+                        </div>
+                        
+                        <div class="ai-chat-input">
+                            <input type="text" id="aiQuestion" placeholder="Спроси Leo о чём угодно...">
+                            <button id="askAI">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Расписание -->
+                <div class="widget schedule-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Расписание</h3>
+                        <span class="date">Сегодня</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="schedule-list">
+                            <div class="schedule-item">
+                                <span class="time">8:30</span>
+                                <span class="subject">Математика</span>
+                                <span class="room">201</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="time">9:25</span>
+                                <span class="subject">Русский язык</span>
+                                <span class="room">105</span>
+                            </div>
+                            <div class="schedule-item current">
+                                <span class="time">10:30</span>
+                                <span class="subject">Физика</span>
+                                <span class="room">301</span>
+                            </div>
+                            <div class="schedule-item">
+                                <span class="time">11:25</span>
+                                <span class="subject">Информатика</span>
+                                <span class="room">401</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Задания -->
+                <div class="widget tasks-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-tasks"></i> Задания</h3>
+                        <span class="count">3 на сегодня</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="tasks-list">
+                            <div class="task-item priority-high">
+                                <input type="checkbox" id="task1">
+                                <label for="task1">
+                                    <span class="task-title">Математика: уравнения</span>
+                                    <span class="task-deadline">Завтра, 8:30</span>
+                                </label>
+                            </div>
+                            <div class="task-item priority-medium">
+                                <input type="checkbox" id="task2">
+                                <label for="task2">
+                                    <span class="task-title">Русский: сочинение</span>
+                                    <span class="task-deadline">Четверг</span>
+                                </label>
+                            </div>
+                            <div class="task-item priority-low">
+                                <input type="checkbox" id="task3">
+                                <label for="task3">
+                                    <span class="task-title">Физика: лабораторная</span>
+                                    <span class="task-deadline">Пятница</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="add-task-btn">
+                            <i class="fas fa-plus"></i> Добавить задание
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Прогресс -->
+                <div class="widget progress-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-chart-line"></i> Прогресс</h3>
+                        <span class="percent">65%</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="progress-circle">
+                            <div class="circle">
+                                <div class="mask full">
+                                    <div class="fill"></div>
+                                </div>
+                                <div class="inside-circle">
+                                    <span>65%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="subject-progress">
+                            <div class="subject">
+                                <span>Математика</span>
+                                <div class="subject-bar">
+                                    <div class="subject-fill" style="width: 80%"></div>
+                                </div>
+                                <span>80%</span>
+                            </div>
+                            <div class="subject">
+                                <span>Русский</span>
+                                <div class="subject-bar">
+                                    <div class="subject-fill" style="width: 60%"></div>
+                                </div>
+                                <span>60%</span>
+                            </div>
+                            <div class="subject">
+                                <span>Физика</span>
+                                <div class="subject-bar">
+                                    <div class="subject-fill" style="width: 75%"></div>
+                                </div>
+                                <span>75%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Игры -->
+                <div class="widget games-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-gamepad"></i> Игровая зона</h3>
+                        <span class="available">4 игры</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="games-grid">
+                            <div class="game-card">
+                                <i class="fas fa-calculator"></i>
+                                <h4>Математика</h4>
+                                <button class="play-btn">Играть</button>
+                            </div>
+                            <div class="game-card">
+                                <i class="fas fa-atom"></i>
+                                <h4>Физика</h4>
+                                <button class="play-btn">Играть</button>
+                            </div>
+                            <div class="game-card">
+                                <i class="fas fa-language"></i>
+                                <h4>Слова</h4>
+                                <button class="play-btn">Играть</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Рейтинг -->
+                <div class="widget ranking-widget">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-trophy"></i> Топ класса</h3>
+                        <span class="update">Обновлено сегодня</span>
+                    </div>
+                    <div class="widget-body">
+                        <div class="leaderboard">
+                            <div class="leaderboard-item first">
+                                <span class="rank">1</span>
+                                <span class="name">Иван Иванов</span>
+                                <span class="points">8,425</span>
+                            </div>
+                            <div class="leaderboard-item">
+                                <span class="rank">2</span>
+                                <span class="name">Мария Петрова</span>
+                                <span class="points">7,850</span>
+                            </div>
+                            <div class="leaderboard-item">
+                                <span class="rank">3</span>
+                                <span class="name">Алексей Сидоров</span>
+                                <span class="points">7,200</span>
+                            </div>
+                            <div class="leaderboard-item you">
+                                <span class="rank">4</span>
+                                <span class="name">Вы</span>
+                                <span class="points" id="yourPoints">1,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Мотивация -->
+            <section class="motivation-section">
+                <div class="daily-challenge">
+                    <h3><i class="fas fa-fire"></i> Задание дня</h3>
+                    <p>Реши 10 математических задач и получи 50 очков полёта!</p>
+                    <div class="challenge-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                        <span>4/10</span>
+                    </div>
+                </div>
+                
+                <div class="streak-counter">
+                    <h3><i class="fas fa-calendar-check"></i> Активность</h3>
+                    <p>🔥 7 дней подряд</p>
+                    <div class="streak-days">
+                        <span class="day active">Пн</span>
+                        <span class="day active">Вт</span>
+                        <span class="day active">Ср</span>
+                        <span class="day active">Чт</span>
+                        <span class="day active">Пт</span>
+                        <span class="day active">Сб</span>
+                        <span class="day active">Вс</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Футер -->
+            <footer class="dashboard-footer">
+                <p>Leo Assistant v2.0 • Твой путь к знаниям • Сегодня: <span id="currentDate"></span></p>
+            </footer>
+        </main>
     </div>
-
-    <!-- Отладка -->
-    <div style="margin-top: 50px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px; max-width: 800px; margin: 40px auto; font-family: 'JetBrains Mono', monospace;">
-        <h4><i class="fas fa-bug"></i> Информация для отладки</h4>
-        <p id="debug-info">Загрузка данных...</p>
-        <button onclick="checkLocalStorage()" style="background: #666; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px; cursor: pointer;">Проверить LocalStorage</button>
+    
+    <!-- Уведомления -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Сообщение</span>
     </div>
-
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // КОД ДЛЯ DASHBOARD.HTML
-        console.log('✅ dashboard.html загружен!');
-        
-        // 1. СРАЗУ проверяем авторизацию
-        const userData = JSON.parse(localStorage.getItem('leoUser'));
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        
-        if (!isLoggedIn || !userData) {
-            console.error('❌ ОШИБКА: Нет данных авторизации. Редирект на вход.');
-            alert('Ошибка авторизации. Вы будете перенаправлены на страницу входа.');
-            setTimeout(() => {
+        // Leo Dashboard - Полноценный дашборд
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Leo Dashboard загружается...');
+            
+            // Проверяем авторизацию
+            const userData = JSON.parse(localStorage.getItem('leoUser'));
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            
+            if (!isLoggedIn || !userData) {
+                alert('Пожалуйста, войдите в систему');
                 window.location.href = 'index.html';
-            }, 2000);
-        } else {
-            console.log('✅ Пользователь авторизован:', userData);
+                return;
+            }
             
-            // 2. Показываем данные пользователя
-            document.getElementById('display-name').textContent = userData.name || 'Ученик';
-            document.getElementById('display-class').textContent = userData.class ? userData.class.toUpperCase() + ' класс' : '7Б класс';
+            // Инициализация частиц
+            particlesJS('dashboard-particles', {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: ["#00ff88", "#00ccff", "#9d4edd"] },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.1, width: 1 },
+                    move: { enable: true, speed: 2 }
+                },
+                interactivity: {
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" }
+                    }
+                }
+            });
             
-            // 3. Показываем отладочную информацию
-            document.getElementById('debug-info').innerHTML = `
-                <strong>Данные в localStorage:</strong><br>
-                • isLoggedIn: <span style="color: #00ff88;">${isLoggedIn}</span><br>
-                • Имя пользователя: <span style="color: #00ccff;">${userData.name || 'Нет данных'}</span><br>
-                • Класс: <span style="color: #00ccff;">${userData.class || 'Нет данных'}</span><br>
-                • Роль: <span style="color: #00ccff;">${userData.role || 'student'}</span><br>
-                <hr>
-                <span style="color: #00ff88;">✅ Панель управления загружена корректно.</span>
-            `;
-        }
-        
-        // Функции для кнопок
-        function askAI() {
-            alert('AI Помощник будет доступен в полной версии интерфейса!');
-        }
-        
-        function showTasks() {
-            alert('Список заданий будет доступен в полной версии интерфейса!');
-        }
-        
-        function logout() {
-            localStorage.removeItem('leoUser');
-            localStorage.removeItem('isLoggedIn');
-            alert('Выход выполнен. Возврат на страницу входа...');
-            window.location.href = 'index.html';
-        }
-        
-        function checkLocalStorage() {
-            const info = `Проверка LocalStorage:
-            • leoUser: ${localStorage.getItem('leoUser') ? 'ЕСТЬ' : 'НЕТ'}
-            • isLoggedIn: ${localStorage.getItem('isLoggedIn')}
-            • leoAdmin: ${localStorage.getItem('leoAdmin') ? 'ЕСТЬ' : 'НЕТ'}
-            • isAdmin: ${localStorage.getItem('isAdmin')}`;
+            // Обновляем данные пользователя
+            updateUserData(userData);
             
-            document.getElementById('debug-info').innerHTML = info.replace(/\n/g, '<br>');
+            // Скрываем экран загрузки
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.querySelector('.dashboard-container').style.display = 'flex';
+            }, 1000);
+            
+            // Навигация
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Обновляем активный элемент
+                    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Показываем соответствующий раздел
+                    const sectionId = this.getAttribute('href').substring(1);
+                    showNotification(`Переключено на: ${this.querySelector('span').textContent}`);
+                });
+            });
+            
+            // Выход
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Выйти из системы?')) {
+                    localStorage.removeItem('leoUser');
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // AI чат
+            document.getElementById('askAI').addEventListener('click', function() {
+                askAIQuestion();
+            });
+            
+            document.getElementById('aiQuestion').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') askAIQuestion();
+            });
+            
+            // Быстрые вопросы
+            document.querySelectorAll('.quick-question').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    document.getElementById('aiQuestion').value = question;
+                    askAIQuestion();
+                });
+            });
+            
+            // Добавление задания
+            document.querySelector('.add-task-btn').addEventListener('click', function() {
+                const taskName = prompt('Введите название задания:');
+                if (taskName) {
+                    showNotification(`Задание "${taskName}" добавлено!`, 'success');
+                }
+            });
+            
+            // Запуск игры
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const game = this.closest('.game-card').querySelector('h4').textContent;
+                    showNotification(`Запускаем игру: ${game}`, 'info');
+                    // Здесь будет логика запуска игры
+                });
+            });
+            
+            // Функция обновления данных пользователя
+            function updateUserData(user) {
+                // Основная информация
+                document.getElementById('userDisplayName').textContent = user.name || 'Ученик';
+                document.getElementById('userDisplayClass').textContent = user.class ? user.class.toUpperCase() + ' класс' : '7Б класс';
+                document.getElementById('welcomeName').textContent = user.name ? user.name.split(' ')[0] : 'Космонавт';
+                
+                // Уровень и XP
+                document.getElementById('userLevel').textContent = user.level || 1;
+                document.getElementById('xpText').textContent = `${user.xp || 0}/${(user.level || 1) * 500}`;
+                document.getElementById('xpProgress').style.width = `${((user.xp || 0) / ((user.level || 1) * 500)) * 100}%`;
+                
+                // Очки полёта
+                document.getElementById('flightPoints').textContent = (user.flightPoints || 0).toLocaleString();
+                document.getElementById('yourPoints').textContent = (user.flightPoints || 0).toLocaleString();
+                
+                // Дата
+                document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
+            
+            // Функция AI
+            function askAIQuestion() {
+                const question = document.getElementById('aiQuestion').value.trim();
+                const askBtn = document.getElementById('askAI');
+                
+                if (!question) {
+                    showNotification('Введите вопрос для AI!', 'warning');
+                    return;
+                }
+                
+                // Показываем загрузку
+                const originalHtml = askBtn.innerHTML;
+                askBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                askBtn.disabled = true;
+                
+                // Имитация ответа AI
+                setTimeout(() => {
+                    // Проверяем, есть ли нейросеть
+                    let answer;
+                    if (typeof LeoAI !== 'undefined') {
+                        answer = LeoAI.getResponse(question);
+                    } else {
+                        // Простые ответы, если нейросеть не загружена
+                        const responses = [
+                            'Интересный вопрос! Давайте разберем его вместе.',
+                            'Это важная тема. Рекомендую обратиться к учебнику.',
+                            'Попробуйте разбить задачу на части и решать по шагам.',
+                            'У меня пока нет подробной информации, но я обязательно изучу это!'
+                        ];
+                        answer = responses[Math.floor(Math.random() * responses.length)];
+                    }
+                    
+                    // Показываем ответ
+                    showNotification(`AI: ${answer.substring(0, 50)}...`, 'success');
+                    
+                    // Добавляем очки за использование AI
+                    addFlightPoints(25);
+                    
+                    // Очищаем поле
+                    document.getElementById('aiQuestion').value = '';
+                    
+                    // Восстанавливаем кнопку
+                    askBtn.innerHTML = originalHtml;
+                    askBtn.disabled = false;
+                    
+                }, 1000 + Math.random() * 1000);
+            }
+            
+            // Добавить очки полёта
+            function addFlightPoints(amount) {
+                let userData = JSON.parse(localStorage.getItem('leoUser'));
+                if (!userData) return;
+                
+                userData.flightPoints = (userData.flightPoints || 0) + amount;
+                localStorage.setItem('leoUser', JSON.stringify(userData));
+                
+                // Обновляем отображение
+                updateUserData(userData);
+                
+                // Анимация
+                const pointsElement = document.getElementById('flightPoints');
+                pointsElement.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    pointsElement.style.transform = 'scale(1)';
+                }, 300);
+            }
+            
+            // Уведомления
+            window.showNotification = function(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                const icon = notification.querySelector('i');
+                const text = notification.querySelector('span');
+                
+                switch(type) {
+                    case 'success':
+                        icon.className = 'fas fa-check-circle';
+                        notification.style.background = 'linear-gradient(135deg, #00ff88, #00ccff)';
+                        break;
+                    case 'error':
+                        icon.className = 'fas fa-exclamation-circle';
+                        notification.style.background = 'linear-gradient(135deg, #ff416c, #ff4b2b)';
+                        break;
+                    case 'warning':
+                        icon.className = 'fas fa-exclamation-triangle';
+                        notification.style.background = 'linear-gradient(135deg, #ff9966, #ff5e62)';
+                        break;
+                    default:
+                        icon.className = 'fas fa-info-circle';
+                        notification.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                }
+                
+                text.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            };
+            
+            // Автоматическое обновление времени
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('ru-RU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                // Можно добавить отображение времени где-нибудь
+                // document.getElementById('currentTime').textContent = timeString;
+            }
+            
+            setInterval(updateTime, 60000);
+            updateTime();
+            
+            console.log('✅ Leo Dashboard готов к работе!');
+        });
+        
+        // Анимация загрузки
+        function showLoading() {
+            document.getElementById('loadingScreen').style.display = 'flex';
         }
         
-        // 4. ВАЖНО: Убеждаемся, что НЕТ автоматического редиректа обратно на index.html
-        console.log('dashboard.html: Автоматические редиректы отключены.');
+        function hideLoading() {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }
     </script>
 </body>
 </html>
