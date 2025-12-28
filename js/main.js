@@ -1,258 +1,181 @@
-// Основной JavaScript файл для Leo Assistant
+// Leo Assistant - Логика входа (Упрощенная и стабильная)
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Leo Assistant загружен!');
+    console.log('🚀 Leo Assistant загружен!');
     
     // Инициализация частиц
     if (typeof particlesJS !== 'undefined') {
-        particlesJS.load('particles-js', 'js/particles-config.json', function() {
-            console.log('Частицы загружены');
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 120, density: { enable: true, value_area: 800 } },
+                color: { value: ["#00ff88", "#00ccff", "#9d4edd"] },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 4, random: true },
+                line_linked: { 
+                    enable: true, 
+                    distance: 150, 
+                    color: "#ffffff", 
+                    opacity: 0.1, 
+                    width: 1 
+                },
+                move: { 
+                    enable: true, 
+                    speed: 2.5,
+                    direction: "none",
+                    random: true,
+                    out_mode: "out"
+                }
+            },
+            interactivity: {
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            },
+            retina_detect: true
         });
     }
     
-    // Элементы DOM
+    // Переключение форм
     const formSelectorBtns = document.querySelectorAll('.selector-btn');
     const forms = document.querySelectorAll('.form-container');
-    const switchFormLinks = document.querySelectorAll('.switch-form');
-    const demoButtons = document.querySelectorAll('.demo-btn');
-    const submitButtons = {
-        login: document.getElementById('login-submit'),
-        register: document.getElementById('register-submit'),
-        admin: document.getElementById('admin-submit')
-    };
     
-    // ПРЕЖДЕ ВСЕГО: УДАЛЯЕМ старые данные при загрузке страницы входа
-    // Это предотвратит автоматические редиректы
-    localStorage.removeItem('leoUser');
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('leoAdmin');
-    localStorage.removeItem('isAdmin');
-    console.log('Старые сессионные данные очищены');
-    
-    // Переключение между формами
     formSelectorBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const formType = this.getAttribute('data-form');
             
-            // Обновляем активные кнопки
+            // Активируем кнопку
             formSelectorBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             
-            // Показываем нужную форму
+            // Показываем форму
             forms.forEach(form => {
                 form.classList.remove('active');
                 if (form.id === `${formType}-form`) {
-                    setTimeout(() => form.classList.add('active'), 10);
+                    form.classList.add('active');
                 }
             });
             
-            showNotification(`Переключено на форму: ${formType === 'login' ? 'Вход' : formType === 'register' ? 'Регистрация' : 'Админ'}`);
+            showNotification(`Выбрана форма: ${formType === 'login' ? 'Для ученика' : 'Для учителя'}`);
         });
     });
     
-    // Переключение через ссылки
-    switchFormLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const formType = this.getAttribute('data-form');
-            
-            // Находим соответствующую кнопку и кликаем её
-            formSelectorBtns.forEach(btn => {
-                if (btn.getAttribute('data-form') === formType) {
-                    btn.click();
-                }
-            });
-        });
+    // Показ/скрытие пароля
+    document.querySelector('.toggle-password')?.addEventListener('click', function() {
+        const passwordInput = document.getElementById('login-password');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
     });
     
-    // Демо-доступ
-    demoButtons.forEach(btn => {
+    // Демо-режимы
+    document.querySelectorAll('.demo-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const demoType = this.getAttribute('data-demo');
             
-            switch(demoType) {
-                case 'student':
-                    // Демо ученика
-                    document.getElementById('login-email').value = 'student@7b.ru';
-                    document.getElementById('login-password').value = 'student123';
-                    document.getElementById('login-class').value = '7b';
-                    
-                    // Переключаем на форму входа
-                    formSelectorBtns[0].click();
-                    
-                    showNotification('Демо данные ученика загружены!', 'success');
-                    break;
-                    
-                case 'teacher':
-                    // Демо учителя
-                    document.getElementById('login-email').value = 'teacher@school7b.ru';
-                    document.getElementById('login-password').value = 'teacher123';
-                    document.getElementById('login-class').value = '7b';
-                    
-                    formSelectorBtns[0].click();
-                    showNotification('Демо данные учителя загружены!', 'success');
-                    break;
-                    
-                case 'admin-demo':
-                    // Демо администратора
-                    document.getElementById('admin-login').value = 'admin';
-                    document.getElementById('admin-password').value = 'admin123';
-                    document.getElementById('admin-secret').value = 'leo2024';
-                    
-                    formSelectorBtns[2].click();
-                    showNotification('Демо данные администратора загружены!', 'success');
-                    break;
+            if (demoType === 'student') {
+                document.getElementById('login-email').value = 'student@7b-school.ru';
+                document.getElementById('login-password').value = 'demo123';
+                document.getElementById('login-class').value = '7b';
+                formSelectorBtns[0].click();
+                showNotification('Демо-режим ученика активирован!', 'success');
+            } else if (demoType === 'teacher') {
+                document.getElementById('admin-login').value = 'teacher';
+                document.getElementById('admin-password').value = 'teacher123';
+                document.getElementById('admin-secret').value = 'leo2024';
+                formSelectorBtns[1].click();
+                showNotification('Демо-режим учителя активирован!', 'success');
             }
         });
     });
     
-    // Обработка входа (ОСНОВНАЯ ФУНКЦИЯ)
-    if (submitButtons.login) {
-        submitButtons.login.addEventListener('click', function() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value.trim();
-            const userClass = document.getElementById('login-class').value;
+    // Вход ученика
+    document.getElementById('login-submit')?.addEventListener('click', function() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+        const userClass = document.getElementById('login-class').value;
+        
+        if (!email || !password) {
+            showNotification('Заполни все поля, космонавт! 🚀', 'error');
+            return;
+        }
+        
+        // Показ загрузки
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Запускаем системы...';
+        this.disabled = true;
+        
+        // Имитация загрузки
+        setTimeout(() => {
+            // Сохраняем данные пользователя
+            const userData = {
+                id: Date.now(),
+                email: email,
+                name: email.split('@')[0].replace('.', ' '),
+                class: userClass,
+                role: 'student',
+                avatar: Math.floor(Math.random() * 5) + 1,
+                joinDate: new Date().toISOString(),
+                flightPoints: 8425,
+                level: 15,
+                xp: 1250,
+                xpMax: 2000
+            };
             
-            if (!email || !password) {
-                showNotification('Заполните все поля!', 'error');
-                return;
-            }
+            localStorage.setItem('leoUser', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
             
-            // Показываем загрузку
-            const originalText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Вход...';
-            this.disabled = true;
+            showNotification(`Добро пожаловать, ${userData.name}! 🎉`, 'success');
             
-            // Имитация задержки сервера
+            // Переход на дашборд
             setTimeout(() => {
-                // Сохраняем данные пользователя в ЕДИНОМ формате
-                const userData = {
-                    id: Date.now(), // Уникальный ID
-                    email: email,
-                    name: email.split('@')[0].replace('.', ' '),
-                    class: userClass,
-                    role: 'student',
-                    isDemo: email.includes('demo') || email.includes('student@7b.ru') || email.includes('teacher@school7b.ru'),
-                    loginTime: new Date().toISOString()
-                };
-                
-                // Ключевое сохранение
-                localStorage.setItem('leoUser', JSON.stringify(userData));
-                localStorage.setItem('isLoggedIn', 'true');
-                
-                showNotification(`Вход выполнен успешно! Добро пожаловать, ${userData.name}!`, 'success');
-                
-                // Ключевой редирект - только после успешного сохранения
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 800);
-                
-            }, 800);
-        });
-    }
+                window.location.href = 'dashboard.html';
+            }, 1200);
+            
+        }, 1500);
+    });
     
-    // Обработка регистрации
-    if (submitButtons.register) {
-        submitButtons.register.addEventListener('click', function() {
-            const name = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-password').value.trim();
-            const userClass = document.getElementById('reg-class').value;
-            
-            if (!name || !email || !password) {
-                showNotification('Заполните все поля!', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showNotification('Пароль должен быть не менее 6 символов!', 'error');
-                return;
-            }
-            
-            // Показываем загрузку
+    // Вход учителя
+    document.getElementById('admin-submit')?.addEventListener('click', function() {
+        const login = document.getElementById('admin-login').value.trim();
+        const password = document.getElementById('admin-password').value.trim();
+        const secret = document.getElementById('admin-secret').value.trim();
+        
+        // Проверка демо-доступа
+        if (login === 'teacher' && password === 'teacher123' && secret === 'leo2024') {
             const originalText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загружаем панель...';
             this.disabled = true;
             
             setTimeout(() => {
-                const userData = {
-                    id: Date.now(),
-                    name: name,
-                    email: email,
-                    class: userClass,
-                    role: 'student',
-                    isDemo: false,
-                    registeredAt: new Date().toISOString(),
-                    loginTime: new Date().toISOString()
+                const adminData = {
+                    login: login,
+                    role: 'admin',
+                    permissions: ['users', 'content', 'stats', 'ai', 'system'],
+                    lastLogin: new Date().toISOString()
                 };
                 
-                // Сохраняем пользователя в общий список и как текущего
-                let users = JSON.parse(localStorage.getItem('leoUsers') || '[]');
-                users.push(userData);
-                localStorage.setItem('leoUsers', JSON.stringify(users));
-                localStorage.setItem('leoUser', JSON.stringify(userData));
-                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('leoAdmin', JSON.stringify(adminData));
+                localStorage.setItem('isAdmin', 'true');
                 
-                showNotification('Регистрация успешна!', 'success');
+                showNotification('Панель управления загружается...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 800);
-                
-            }, 800);
-        });
-    }
+                    window.location.href = 'admin.html';
+                }, 1000);
+            }, 1200);
+        } else {
+            showNotification('Неверные данные доступа', 'error');
+        }
+    });
     
-    // Обработка входа админа
-    if (submitButtons.admin) {
-        submitButtons.admin.addEventListener('click', function() {
-            const login = document.getElementById('admin-login').value.trim();
-            const password = document.getElementById('admin-password').value.trim();
-            const secret = document.getElementById('admin-secret').value.trim();
-            
-            if (!login || !password || !secret) {
-                showNotification('Заполните все поля!', 'error');
-                return;
-            }
-            
-            // Проверка демо-доступа
-            if (login === 'admin' && password === 'admin123' && secret === 'leo2024') {
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Вход...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    const adminData = {
-                        login: login,
-                        role: 'admin',
-                        isDemo: true,
-                        loginTime: new Date().toISOString()
-                    };
-                    
-                    localStorage.setItem('leoAdmin', JSON.stringify(adminData));
-                    localStorage.setItem('isAdmin', 'true');
-                    localStorage.setItem('leoUser', JSON.stringify(adminData)); // Для совместимости
-                    localStorage.setItem('isLoggedIn', 'true'); // Для совместимости
-                    
-                    showNotification('Вход в админ-панель выполнен!', 'success');
-                    
-                    // Переход на админ-панель
-                    setTimeout(() => {
-                        window.location.href = 'admin.html';
-                    }, 800);
-                }, 800);
-            } else {
-                showNotification('Неверные данные администратора!', 'error');
-            }
-        });
-    }
-    
-    // Функция показа уведомлений
+    // Функция уведомлений
     window.showNotification = function(message, type = 'info') {
         const notification = document.getElementById('notification');
         const icon = notification.querySelector('i');
         const text = notification.querySelector('span');
         
-        // Устанавливаем иконку и цвет по типу
         switch(type) {
             case 'success':
                 icon.className = 'fas fa-check-circle';
@@ -262,10 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.className = 'fas fa-exclamation-circle';
                 notification.style.background = 'linear-gradient(135deg, #ff416c, #ff4b2b)';
                 break;
-            case 'warning':
-                icon.className = 'fas fa-exclamation-triangle';
-                notification.style.background = 'linear-gradient(135deg, #ff9966, #ff5e62)';
-                break;
             default:
                 icon.className = 'fas fa-info-circle';
                 notification.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
@@ -274,9 +193,21 @@ document.addEventListener('DOMContentLoaded', function() {
         text.textContent = message;
         notification.classList.add('show');
         
-        // Скрываем уведомление через 3 секунды
         setTimeout(() => {
             notification.classList.remove('show');
-        }, 3000);
+        }, 4000);
     };
+    
+    // Автопереключение через ссылки
+    document.querySelectorAll('.switch-form').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const formType = this.getAttribute('data-form');
+            formSelectorBtns.forEach(btn => {
+                if (btn.getAttribute('data-form') === formType) {
+                    btn.click();
+                }
+            });
+        });
+    });
 });
