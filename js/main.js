@@ -262,12 +262,12 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // Проверяем, есть ли сохраненная сессия
-    if (localStorage.getItem('isLoggedIn') === 'true') {
+    // if (localStorage.getItem('isLoggedIn') === 'true') {
         // Автоматически перенаправляем на дашборд
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 100);
-    }
+      //  setTimeout(() => {
+        //    window.location.href = 'dashboard.html';
+       // }, 100);
+    // }
     
     // Добавляем интерактивность нейронам
     const neurons = document.querySelectorAll('.neuron');
