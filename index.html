@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo Assistant - Вход</title>
+    <title>Leo Assistant | AI-помощник для 7Б класса</title>
+    
+    <!-- Стили -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209265.png">
 </head>
 <body>
-    <!-- Частицы -->
+    
+    <!-- ЛЕТАЮЩИЕ МОЛЕКУЛЫ (Частицы) -->
     <div id="particles-js"></div>
     
     <!-- Главный контейнер -->
     <div class="container">
+        
         <!-- Логотип и название -->
         <div class="logo-container">
             <div class="logo-circle">
@@ -30,163 +36,111 @@
                 </div>
             </div>
             <h1 class="logo-text">Leo Assistant</h1>
-            <p class="logo-subtitle">AI-помощник для 7Б класса</p>
+            <p class="logo-subtitle">Твой персональный AI-наставник для учёбы и игрового развития</p>
         </div>
 
-        <!-- Выбор формы -->
+        <!-- Выбор формы Входа -->
         <div class="form-selector">
             <button class="selector-btn active" data-form="login">
-                <i class="fas fa-sign-in-alt"></i> Вход
-            </button>
-            <button class="selector-btn" data-form="register">
-                <i class="fas fa-user-plus"></i> Регистрация
+                <i class="fas fa-rocket"></i> Вход для ученика
             </button>
             <button class="selector-btn" data-form="admin">
-                <i class="fas fa-cog"></i> Админ
+                <i class="fas fa-user-shield"></i> Вход для учителя
             </button>
         </div>
 
-        <!-- Форма входа -->
+        <!-- Форма входа ученика -->
         <div class="form-container active" id="login-form">
             <div class="form-header">
-                <h2><i class="fas fa-sign-in-alt"></i> Вход в систему</h2>
-                <p>Введите ваши данные для доступа к Leo Assistant</p>
+                <h2><i class="fas fa-user-astronaut"></i> Добро пожаловать!</h2>
+                <p>Войди в свой мир знаний и достижений</p>
             </div>
             
             <div class="form-group">
-                <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
-                <input type="email" id="login-email" placeholder="student@school7b.ru" class="form-input" value="demo@student.ru">
+                <label for="login-email"><i class="fas fa-envelope"></i> Твой школьный email</label>
+                <input type="email" id="login-email" placeholder="ivanov@7b-school.ru" class="form-input">
             </div>
             
             <div class="form-group">
-                <label for="login-password"><i class="fas fa-lock"></i> Пароль</label>
-                <input type="password" id="login-password" placeholder="Введите пароль" class="form-input" value="demo123">
+                <label for="login-password"><i class="fas fa-lock"></i> Секретный пароль</label>
+                <div style="position: relative;">
+                    <input type="password" id="login-password" placeholder="Введи свой пароль" class="form-input">
+                    <i class="fas fa-eye toggle-password" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); cursor: pointer;"></i>
+                </div>
             </div>
             
             <div class="form-group">
-                <label for="login-class"><i class="fas fa-users"></i> Класс</label>
+                <label for="login-class"><i class="fas fa-users-class"></i> Твой класс</label>
                 <select id="login-class" class="form-input">
-                    <option value="7b" selected>7Б класс</option>
                     <option value="7a">7А класс</option>
+                    <option value="7b" selected>7Б класс</option>
+                    <option value="8a">8А класс</option>
                     <option value="8b">8Б класс</option>
                 </select>
             </div>
             
             <button class="submit-btn" id="login-submit">
-                <i class="fas fa-rocket"></i> Войти в систему
+                <i class="fas fa-play-circle"></i> Начать обучение!
             </button>
             
-            <div class="form-footer">
-                <p>Нет аккаунта? <a href="#" class="switch-form" data-form="register">Зарегистрироваться</a></p>
-                <p><a href="#" class="switch-form" data-form="admin"><i class="fas fa-key"></i> Вход для администратора</a></p>
+            <!-- Быстрый демо-доступ -->
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(157, 78, 221, 0.1); border-radius: 15px; border: 2px solid rgba(157, 78, 221, 0.3);">
+                <h4 style="color: #9d4edd; margin-bottom: 15px;"><i class="fas fa-magic"></i> Попробуй демо-режим</h4>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="demo-btn" data-demo="student" style="padding: 12px 25px; background: rgba(0,255,136,0.2); border: 2px solid var(--primary); border-radius: 10px; color: var(--primary); cursor: pointer;">
+                        <i class="fas fa-user-graduate"></i> Демо: Ученик
+                    </button>
+                    <button class="demo-btn" data-demo="teacher" style="padding: 12px 25px; background: rgba(0,204,255,0.2); border: 2px solid var(--secondary); border-radius: 10px; color: var(--secondary); cursor: pointer;">
+                        <i class="fas fa-chalkboard-teacher"></i> Демо: Учитель
+                    </button>
+                </div>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 15px;">
+                    Демо-режим покажет возможности Leo Assistant без регистрации
+                </p>
             </div>
         </div>
 
-        <!-- Форма регистрации -->
-        <div class="form-container" id="register-form">
-            <div class="form-header">
-                <h2><i class="fas fa-user-plus"></i> Регистрация</h2>
-                <p>Создайте аккаунт для доступа к Leo Assistant</p>
-            </div>
-            
-            <div class="form-group">
-                <label for="reg-name"><i class="fas fa-user"></i> Имя и фамилия</label>
-                <input type="text" id="reg-name" placeholder="Иван Иванов" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
-                <input type="email" id="reg-email" placeholder="student@school7b.ru" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="reg-password"><i class="fas fa-lock"></i> Пароль</label>
-                <input type="password" id="reg-password" placeholder="Придумайте пароль" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="reg-class"><i class="fas fa-users"></i> Класс</label>
-                <select id="reg-class" class="form-input">
-                    <option value="7b">7Б класс</option>
-                    <option value="7a">7А класс</option>
-                    <option value="8b">8Б класс</option>
-                </select>
-            </div>
-            
-            <button class="submit-btn" id="register-submit">
-                <i class="fas fa-user-check"></i> Зарегистрироваться
-            </button>
-            
-            <div class="form-footer">
-                <p>Уже есть аккаунт? <a href="#" class="switch-form" data-form="login">Войти</a></p>
-            </div>
-        </div>
-
-        <!-- Форма админа -->
+        <!-- Форма входа учителя/админа -->
         <div class="form-container" id="admin-form">
             <div class="form-header">
-                <h2><i class="fas fa-cog"></i> Администратор</h2>
-                <p>Вход в панель управления Leo Assistant</p>
+                <h2><i class="fas fa-user-shield"></i> Панель управления</h2>
+                <p>Доступ к аналитике и настройкам системы</p>
             </div>
             
             <div class="form-group">
-                <label for="admin-login"><i class="fas fa-user-shield"></i> Логин администратора</label>
-                <input type="text" id="admin-login" placeholder="admin" class="form-input" value="admin">
+                <label for="admin-login"><i class="fas fa-user-cog"></i> Логин администратора</label>
+                <input type="text" id="admin-login" placeholder="teacher_login" class="form-input" value="teacher">
             </div>
             
             <div class="form-group">
-                <label for="admin-password"><i class="fas fa-lock"></i> Пароль</label>
-                <input type="password" id="admin-password" placeholder="Введите пароль администратора" class="form-input" value="admin123">
+                <label for="admin-password"><i class="fas fa-key"></i> Пароль</label>
+                <input type="password" id="admin-password" placeholder="Введите пароль" class="form-input" value="teacher123">
             </div>
             
             <div class="form-group">
-                <label for="admin-secret"><i class="fas fa-key"></i> Секретный ключ</label>
-                <input type="password" id="admin-secret" placeholder="Секретный ключ системы" class="form-input" value="leo2024">
+                <label for="admin-secret"><i class="fas fa-fingerprint"></i> Ключ доступа</label>
+                <input type="password" id="admin-secret" placeholder="Секретный ключ" class="form-input" value="leo2024">
             </div>
             
             <button class="submit-btn admin-btn" id="admin-submit">
-                <i class="fas fa-unlock-alt"></i> Войти в админ-панель
+                <i class="fas fa-unlock-alt"></i> Открыть панель управления
             </button>
             
-            <div class="form-footer">
-                <p><a href="#" class="switch-form" data-form="login"><i class="fas fa-arrow-left"></i> Вернуться к обычному входу</a></p>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#" class="switch-form" data-form="login" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-arrow-left"></i> Вернуться к входу для ученика
+                </a>
             </div>
         </div>
 
-        <!-- Демо доступ -->
-        <div class="demo-access">
-            <h3><i class="fas fa-magic"></i> Быстрый доступ</h3>
-            <div class="demo-buttons">
-                <button class="demo-btn student-btn" data-demo="student">
-                    <i class="fas fa-user-graduate"></i> Демо: Ученик
-                </button>
-                <button class="demo-btn teacher-btn" data-demo="teacher">
-                    <i class="fas fa-chalkboard-teacher"></i> Демо: Учитель
-                </button>
-                <button class="demo-btn admin-btn" data-demo="admin-demo">
-                    <i class="fas fa-user-shield"></i> Демо: Админ
-                </button>
-            </div>
-            <p class="demo-note">Демо-доступ заполнит форму автоматически</p>
-        </div>
-
-        <!-- Информация о системе -->
-        <div class="system-info">
-            <div class="info-card">
-                <i class="fas fa-robot"></i>
-                <h4>AI-помощник</h4>
-                <p>Умный помощник для учёбы</p>
-            </div>
-            <div class="info-card">
-                <i class="fas fa-gamepad"></i>
-                <h4>Игровое обучение</h4>
-                <p>Учись играя</p>
-            </div>
-            <div class="info-card">
-                <i class="fas fa-chart-line"></i>
-                <h4>Отслеживание</h4>
-                <p>Следи за своим прогрессом</p>
-            </div>
+        <!-- Футер -->
+        <div style="text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="color: rgba(255,255,255,0.5); font-size: 0.95rem;">
+                <i class="fas fa-heart" style="color: #ff416c;"></i> 
+                Leo Assistant создан с заботой о каждом ученике
+                <br>
+                <span style="font-size: 0.85rem;">Версия 2.0 | 2024</span>
+            </p>
         </div>
     </div>
 
