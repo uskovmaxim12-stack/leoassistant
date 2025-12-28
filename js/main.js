@@ -1,5 +1,4 @@
 // Основной JavaScript файл для Leo Assistant
-
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Leo Assistant загружен!');
     
@@ -20,6 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
         register: document.getElementById('register-submit'),
         admin: document.getElementById('admin-submit')
     };
+    
+    // ПРЕЖДЕ ВСЕГО: УДАЛЯЕМ старые данные при загрузке страницы входа
+    // Это предотвратит автоматические редиректы
+    localStorage.removeItem('leoUser');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('leoAdmin');
+    localStorage.removeItem('isAdmin');
+    console.log('Старые сессионные данные очищены');
     
     // Переключение между формами
     formSelectorBtns.forEach(btn => {
@@ -98,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Обработка входа
+    // Обработка входа (ОСНОВНАЯ ФУНКЦИЯ)
     if (submitButtons.login) {
         submitButtons.login.addEventListener('click', function() {
             const email = document.getElementById('login-email').value.trim();
@@ -111,31 +118,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Показываем загрузку
+            const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Вход...';
             this.disabled = true;
             
             // Имитация задержки сервера
             setTimeout(() => {
-                // Сохраняем данные пользователя
+                // Сохраняем данные пользователя в ЕДИНОМ формате
                 const userData = {
+                    id: Date.now(), // Уникальный ID
                     email: email,
-                    name: email.split('@')[0],
+                    name: email.split('@')[0].replace('.', ' '),
                     class: userClass,
                     role: 'student',
-                    isDemo: email.includes('demo') || email.includes('student@7b.ru') || email.includes('teacher@school7b.ru')
+                    isDemo: email.includes('demo') || email.includes('student@7b.ru') || email.includes('teacher@school7b.ru'),
+                    loginTime: new Date().toISOString()
                 };
                 
+                // Ключевое сохранение
                 localStorage.setItem('leoUser', JSON.stringify(userData));
                 localStorage.setItem('isLoggedIn', 'true');
                 
-                showNotification('Вход выполнен успешно!', 'success');
+                showNotification(`Вход выполнен успешно! Добро пожаловать, ${userData.name}!`, 'success');
                 
-                // Переход на дашборд
+                // Ключевой редирект - только после успешного сохранения
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 1000);
+                }, 800);
                 
-            }, 1500);
+            }, 800);
         });
     }
     
@@ -158,19 +169,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Показываем загрузку
+            const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Регистрация...';
             this.disabled = true;
             
             setTimeout(() => {
                 const userData = {
+                    id: Date.now(),
                     name: name,
                     email: email,
                     class: userClass,
                     role: 'student',
-                    registeredAt: new Date().toISOString()
+                    isDemo: false,
+                    registeredAt: new Date().toISOString(),
+                    loginTime: new Date().toISOString()
                 };
                 
-                // Сохраняем пользователя
+                // Сохраняем пользователя в общий список и как текущего
                 let users = JSON.parse(localStorage.getItem('leoUsers') || '[]');
                 users.push(userData);
                 localStorage.setItem('leoUsers', JSON.stringify(users));
@@ -181,9 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 1000);
+                }, 800);
                 
-            }, 1500);
+            }, 800);
         });
     }
     
@@ -201,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Проверка демо-доступа
             if (login === 'admin' && password === 'admin123' && secret === 'leo2024') {
+                const originalText = this.innerHTML;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Вход...';
                 this.disabled = true;
                 
@@ -208,19 +224,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     const adminData = {
                         login: login,
                         role: 'admin',
-                        isDemo: true
+                        isDemo: true,
+                        loginTime: new Date().toISOString()
                     };
                     
                     localStorage.setItem('leoAdmin', JSON.stringify(adminData));
                     localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('leoUser', JSON.stringify(adminData)); // Для совместимости
+                    localStorage.setItem('isLoggedIn', 'true'); // Для совместимости
                     
                     showNotification('Вход в админ-панель выполнен!', 'success');
                     
                     // Переход на админ-панель
                     setTimeout(() => {
                         window.location.href = 'admin.html';
-                    }, 1000);
-                }, 1500);
+                    }, 800);
+                }, 800);
             } else {
                 showNotification('Неверные данные администратора!', 'error');
             }
@@ -260,80 +279,4 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.classList.remove('show');
         }, 3000);
     };
-    
-    // Проверяем, есть ли сохраненная сессия
-    // if (localStorage.getItem('isLoggedIn') === 'true') {
-        // Автоматически перенаправляем на дашборд
-      //  setTimeout(() => {
-        //    window.location.href = 'dashboard.html';
-       // }, 100);
-    // }
-    
-    // Добавляем интерактивность нейронам
-    const neurons = document.querySelectorAll('.neuron');
-    neurons.forEach((neuron, index) => {
-        neuron.addEventListener('mouseenter', () => {
-            neuron.style.transform = 'scale(1.5)';
-            neuron.style.background = '#00ffff';
-            neuron.style.boxShadow = '0 0 20px #00ffff';
-        });
-        
-        neuron.addEventListener('mouseleave', () => {
-            neuron.style.transform = 'scale(1)';
-            neuron.style.background = '#00ff88';
-            neuron.style.boxShadow = 'none';
-        });
-        
-        // Добавляем задержку для эффекта волны
-        setTimeout(() => {
-            neuron.classList.add('neuron-glow');
-        }, index * 300);
-    });
-    
-    // Добавляем эффект печатания для подзаголовка
-    const subtitle = document.querySelector('.logo-subtitle');
-    if (subtitle) {
-        const originalText = subtitle.textContent;
-        subtitle.textContent = '';
-        
-        let i = 0;
-        const typeWriter = () => {
-            if (i < originalText.length) {
-                subtitle.textContent += originalText.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
-        };
-        
-        setTimeout(typeWriter, 1000);
-    }
-    
-    // Инициализация звуковых эффектов (опционально)
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    
-    function playClickSound() {
-        try {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.1);
-        } catch (e) {
-            console.log('Аудио контекст не поддерживается');
-        }
-    }
-    
-    // Добавляем звуки на клики
-    document.querySelectorAll('button, .switch-form').forEach(element => {
-        element.addEventListener('click', playClickSound);
-    });
 });
