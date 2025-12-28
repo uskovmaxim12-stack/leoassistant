@@ -34,6 +34,214 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    // ================= AI MANAGEMENT =================
+
+// Управление нейросетью
+function initAIManagement() {
+    if (typeof LeoAI === 'undefined') {
+        console.error('Нейросеть не загружена');
+        return;
+    }
+    
+    // Загрузка статистики AI
+    updateAIAdminStats();
+    
+    // Обработчики для кнопок обучения
+    document.querySelectorAll('.training-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.classList.contains('start') ? 'start' :
+                         this.classList.contains('stop') ? 'stop' : 'reset';
+            
+            handleAITraining(action);
+        });
+    });
+    
+    // Добавление знаний
+    document.querySelector('.knowledge-add-btn')?.addEventListener('click', function() {
+        addKnowledgeManually();
+    });
+    
+    // Экспорт знаний
+    document.querySelector('.section-action-btn[data-action="export"]')?.addEventListener('click', function() {
+        exportAIKnowledge();
+    });
+    
+    // Импорт знаний
+    document.querySelector('.section-action-btn[data-action="import"]')?.addEventListener('click', function() {
+        document.getElementById('knowledge-import-input').click();
+    });
+    
+    document.getElementById('knowledge-import-input')?.addEventListener('change', function(e) {
+        importAIKnowledge(e.target.files[0]);
+    });
+}
+
+// Обновить статистику AI в админке
+function updateAIAdminStats() {
+    if (!LeoAI) return;
+    
+    const stats = LeoAI.getStats();
+    
+    // Обновляем цифры
+    document.querySelectorAll('.ai-stat-value').forEach(el => {
+        const statType = el.dataset.stat;
+        if (statType === 'totalKeywords') {
+            el.textContent = stats.totalKeywords;
+        } else if (statType === 'accuracy') {
+            el.textContent = `${(stats.accuracy * 100).toFixed(1)}%`;
+        } else if (statType === 'learnedPhrases') {
+            el.textContent = stats.learnedPhrases;
+        } else if (statType === 'categories') {
+            el.textContent = stats.categories;
+        }
+    });
+    
+    // Обновляем прогресс-бары
+    document.querySelectorAll('.ai-progress-bar').forEach(el => {
+        const progressType = el.dataset.progress;
+        if (progressType === 'accuracy') {
+            el.style.width = `${stats.accuracy * 100}%`;
+        }
+    });
+}
+
+// Обработка обучения AI
+function handleAITraining(action) {
+    switch(action) {
+        case 'start':
+            startAITraining();
+            break;
+        case 'stop':
+            stopAITraining();
+            break;
+        case 'reset':
+            resetAIKnowledge();
+            break;
+    }
+}
+
+// Начать обучение
+function startAITraining() {
+    showAdminNotification('Обучение нейросети начато...', 'info');
+    
+    // Имитация обучения
+    const trainingInterval = setInterval(() => {
+        // Добавляем случайные знания
+        const categories = ['математика', 'физика', 'русский язык', 'английский язык', 'биология', 'история'];
+        const category = categories[Math.floor(Math.random() * categories.length)];
+        const keywords = ['новый термин', 'важное правило', 'определение', 'формула', 'закон', 'теорема'];
+        const keyword = `Обученный ${keywords[Math.floor(Math.random() * keywords.length)]} ${Date.now().toString().slice(-4)}`;
+        const answer = `Это автоматически добавленное знание для тестирования обучения нейросети. Категория: ${category}.`;
+        
+        LeoAI.addKnowledge(category, keyword, answer);
+        
+        // Обновляем статистику
+        updateAIAdminStats();
+        
+        // Анимация
+        const trainingProgress = document.querySelector('.training-progress-bar');
+        if (trainingProgress) {
+            const currentWidth = parseInt(trainingProgress.style.width) || 0;
+            trainingProgress.style.width = `${Math.min(currentWidth + 10, 100)}%`;
+        }
+    }, 1000);
+    
+    // Сохраняем ID интервала для остановки
+    window.trainingInterval = trainingInterval;
+    
+    // Обновляем UI
+    document.querySelector('.training-btn.start').disabled = true;
+    document.querySelector('.training-btn.stop').disabled = false;
+}
+
+// Остановить обучение
+function stopAITraining() {
+    if (window.trainingInterval) {
+        clearInterval(window.trainingInterval);
+        window.trainingInterval = null;
+        showAdminNotification('Обучение остановлено', 'warning');
+        
+        document.querySelector('.training-btn.start').disabled = false;
+        document.querySelector('.training-btn.stop').disabled = true;
+    }
+}
+
+// Сбросить знания
+function resetAIKnowledge() {
+    if (confirm('Вы уверены? Это удалит все обученные знания нейросети.')) {
+        LeoAI.resetLearning();
+        showAdminNotification('Нейросеть сброшена к начальному состоянию', 'success');
+        updateAIAdminStats();
+    }
+}
+
+// Добавить знания вручную
+function addKnowledgeManually() {
+    const categoryInput = document.getElementById('knowledge-category');
+    const keywordInput = document.getElementById('knowledge-keyword');
+    const answerInput = document.getElementById('knowledge-answer');
+    
+    const category = categoryInput?.value.trim();
+    const keyword = keywordInput?.value.trim();
+    const answer = answerInput?.value.trim();
+    
+    if (!category || !keyword || !answer) {
+        showAdminNotification('Заполните все поля!', 'error');
+        return;
+    }
+    
+    if (LeoAI.addKnowledge(category, keyword, answer)) {
+        showAdminNotification('Знание успешно добавлено!', 'success');
+        
+        // Очищаем поля
+        if (keywordInput) keywordInput.value = '';
+        if (answerInput) answerInput.value = '';
+        
+        updateAIAdminStats();
+    }
+}
+
+// Экспорт знаний
+function exportAIKnowledge() {
+    const knowledge = LeoAI.exportKnowledge();
+    const dataStr = JSON.stringify(knowledge, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `leo-ai-knowledge-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    
+    showAdminNotification('Знания экспортированы в JSON файл', 'success');
+}
+
+// Импорт знаний
+function importAIKnowledge(file) {
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const knowledgeData = JSON.parse(e.target.result);
+            if (LeoAI.importKnowledge(knowledgeData)) {
+                showAdminNotification('Знания успешно импортированы!', 'success');
+                updateAIAdminStats();
+            } else {
+                showAdminNotification('Ошибка импорта: неверный формат файла', 'error');
+            }
+        } catch (error) {
+            showAdminNotification('Ошибка чтения файла', 'error');
+        }
+    };
+    reader.readAsText(file);
+}
+
+// Инициализировать управление AI при загрузке
+if (typeof LeoAI !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', initAIManagement);
+}
     
     // Навигация по админ-панели
     const menuItems = document.querySelectorAll('.admin-menu-item');
