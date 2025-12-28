@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leo Assistant | AI-помощник для 7Б класса</title>
+    <title>Leo Assistant | Умный помощник для учёбы</title>
     
     <!-- Стили -->
     <link rel="stylesheet" href="css/main.css">
@@ -11,18 +11,251 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209265.png">
+    <style>
+        /* Дополнительные стили для входа */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+        
+        .floating-card {
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: var(--glow);
+            max-width: 450px;
+            margin: 0 auto;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ff88, #00ccff, #9d4edd, #00ff88);
+            border-radius: 27px;
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+            background-size: 400% 400%;
+        }
+        
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-icon {
+            font-size: 4rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .login-title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 0 4px rgba(0, 255, 136, 0.15);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            border: none;
+            border-radius: 15px;
+            color: #0f0c29;
+            font-size: 1.3rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.7s;
+        }
+        
+        .login-btn:hover::after {
+            left: 100%;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .divider span {
+            padding: 0 20px;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .demo-btn {
+            flex: 1;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .demo-btn:hover {
+            transform: translateY(-3px);
+            border-color: currentColor;
+        }
+        
+        .demo-btn.student:hover {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+        
+        .demo-btn.teacher:hover {
+            background: rgba(157, 78, 221, 0.15);
+            color: #9d4edd;
+        }
+        
+        .admin-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .admin-link a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-link a:hover {
+            color: #00ff88;
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 50px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .floating-card {
+                margin: 0 20px;
+                padding: 30px;
+            }
+            
+            .login-title {
+                font-size: 2rem;
+            }
+            
+            .demo-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     
-    <!-- ЛЕТАЮЩИЕ МОЛЕКУЛЫ (Частицы) -->
+    <!-- ЛЕТАЮЩИЕ ЧАСТИЦЫ (ГЛАВНАЯ ФИШКА) -->
     <div id="particles-js"></div>
     
     <!-- Главный контейнер -->
-    <div class="container">
+    <div class="container" style="padding-top: 60px;">
         
-        <!-- Логотип и название -->
+        <!-- Логотип -->
         <div class="logo-container">
             <div class="logo-circle">
                 <i class="fas fa-brain logo-icon"></i>
@@ -38,121 +271,348 @@
             <h1 class="logo-text">Leo Assistant</h1>
             <p class="logo-subtitle">Твой персональный AI-наставник для учёбы и игрового развития</p>
         </div>
-
-        <!-- Выбор формы Входа -->
-        <div class="form-selector">
-            <button class="selector-btn active" data-form="login">
-                <i class="fas fa-rocket"></i> Вход для ученика
-            </button>
-            <button class="selector-btn" data-form="admin">
-                <i class="fas fa-user-shield"></i> Вход для учителя
-            </button>
-        </div>
-
-        <!-- Форма входа ученика -->
-        <div class="form-container active" id="login-form">
-            <div class="form-header">
-                <h2><i class="fas fa-user-astronaut"></i> Добро пожаловать!</h2>
-                <p>Войди в свой мир знаний и достижений</p>
-            </div>
-            
-            <div class="form-group">
-                <label for="login-email"><i class="fas fa-envelope"></i> Твой школьный email</label>
-                <input type="email" id="login-email" placeholder="ivanov@7b-school.ru" class="form-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="login-password"><i class="fas fa-lock"></i> Секретный пароль</label>
-                <div style="position: relative;">
-                    <input type="password" id="login-password" placeholder="Введи свой пароль" class="form-input">
-                    <i class="fas fa-eye toggle-password" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); cursor: pointer;"></i>
+        
+        <!-- Карточка входа -->
+        <div class="floating-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-user-astronaut"></i>
                 </div>
+                <h2 class="login-title">Добро пожаловать!</h2>
+                <p class="login-subtitle">Войди в свою вселенную знаний</p>
             </div>
             
-            <div class="form-group">
-                <label for="login-class"><i class="fas fa-users-class"></i> Твой класс</label>
-                <select id="login-class" class="form-input">
-                    <option value="7a">7А класс</option>
-                    <option value="7b" selected>7Б класс</option>
-                    <option value="8a">8А класс</option>
-                    <option value="8b">8Б класс</option>
-                </select>
-            </div>
-            
-            <button class="submit-btn" id="login-submit">
-                <i class="fas fa-play-circle"></i> Начать обучение!
-            </button>
-            
-            <!-- Быстрый демо-доступ -->
-            <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(157, 78, 221, 0.1); border-radius: 15px; border: 2px solid rgba(157, 78, 221, 0.3);">
-                <h4 style="color: #9d4edd; margin-bottom: 15px;"><i class="fas fa-magic"></i> Попробуй демо-режим</h4>
-                <div style="display: flex; gap: 15px; justify-content: center;">
-                    <button class="demo-btn" data-demo="student" style="padding: 12px 25px; background: rgba(0,255,136,0.2); border: 2px solid var(--primary); border-radius: 10px; color: var(--primary); cursor: pointer;">
-                        <i class="fas fa-user-graduate"></i> Демо: Ученик
-                    </button>
-                    <button class="demo-btn" data-demo="teacher" style="padding: 12px 25px; background: rgba(0,204,255,0.2); border: 2px solid var(--secondary); border-radius: 10px; color: var(--secondary); cursor: pointer;">
-                        <i class="fas fa-chalkboard-teacher"></i> Демо: Учитель
-                    </button>
+            <!-- Форма входа -->
+            <form id="loginForm">
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-envelope"></i>
+                        Твой email
+                    </label>
+                    <input type="email" class="input-field" id="loginEmail" 
+                           placeholder="привет@7b-класс.рус" required>
                 </div>
-                <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 15px;">
-                    Демо-режим покажет возможности Leo Assistant без регистрации
-                </p>
-            </div>
-        </div>
-
-        <!-- Форма входа учителя/админа -->
-        <div class="form-container" id="admin-form">
-            <div class="form-header">
-                <h2><i class="fas fa-user-shield"></i> Панель управления</h2>
-                <p>Доступ к аналитике и настройкам системы</p>
+                
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-lock"></i>
+                        Пароль
+                    </label>
+                    <input type="password" class="input-field" id="loginPassword" 
+                           placeholder="Введи свой секретный код" required>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-users"></i>
+                        Твой класс
+                    </label>
+                    <select class="input-field" id="loginClass">
+                        <option value="7a">7А класс</option>
+                        <option value="7b" selected>7Б класс</option>
+                        <option value="8a">8А класс</option>
+                        <option value="8b">8Б класс</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginSubmit">
+                    <i class="fas fa-rocket"></i>
+                    Стартовать обучение!
+                </button>
+            </form>
+            
+            <!-- Разделитель -->
+            <div class="divider">
+                <span>или попробуй демо</span>
             </div>
             
-            <div class="form-group">
-                <label for="admin-login"><i class="fas fa-user-cog"></i> Логин администратора</label>
-                <input type="text" id="admin-login" placeholder="teacher_login" class="form-input" value="teacher">
+            <!-- Демо-кнопки -->
+            <div class="demo-buttons">
+                <button class="demo-btn student" id="demoStudent">
+                    <i class="fas fa-user-graduate"></i>
+                    Демо: Ученик
+                </button>
+                <button class="demo-btn teacher" id="demoTeacher">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Демо: Учитель
+                </button>
             </div>
             
-            <div class="form-group">
-                <label for="admin-password"><i class="fas fa-key"></i> Пароль</label>
-                <input type="password" id="admin-password" placeholder="Введите пароль" class="form-input" value="teacher123">
-            </div>
-            
-            <div class="form-group">
-                <label for="admin-secret"><i class="fas fa-fingerprint"></i> Ключ доступа</label>
-                <input type="password" id="admin-secret" placeholder="Секретный ключ" class="form-input" value="leo2024">
-            </div>
-            
-            <button class="submit-btn admin-btn" id="admin-submit">
-                <i class="fas fa-unlock-alt"></i> Открыть панель управления
-            </button>
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="#" class="switch-form" data-form="login" style="color: var(--primary); text-decoration: none; font-weight: 600;">
-                    <i class="fas fa-arrow-left"></i> Вернуться к входу для ученика
+            <!-- Ссылка на админ-панель -->
+            <div class="admin-link">
+                <a href="#" id="showAdminPanel">
+                    <i class="fas fa-user-shield"></i>
+                    Вход для учителя / администратора
                 </a>
             </div>
         </div>
-
+        
         <!-- Футер -->
-        <div style="text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1);">
-            <p style="color: rgba(255,255,255,0.5); font-size: 0.95rem;">
-                <i class="fas fa-heart" style="color: #ff416c;"></i> 
-                Leo Assistant создан с заботой о каждом ученике
-                <br>
-                <span style="font-size: 0.85rem;">Версия 2.0 | 2024</span>
+        <div class="footer-text">
+            <p>© 2024 Leo Assistant • Сделано с ❤️ для 7Б класса</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">
+                <i class="fas fa-star"></i> Игровое обучение • <i class="fas fa-brain"></i> AI-помощник • 
+                <i class="fas fa-trophy"></i> Достижения
             </p>
         </div>
     </div>
-
+    
+    <!-- Админ-панель (скрыта по умолчанию) -->
+    <div id="adminPanel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 41, 0.95); z-index: 1000; padding: 40px;">
+        <div style="max-width: 500px; margin: 50px auto; background: rgba(255,255,255,0.1); padding: 40px; border-radius: 25px; border: 2px solid rgba(0,255,136,0.3);">
+            <h2 style="color: #00ff88; margin-bottom: 30px; text-align: center;">
+                <i class="fas fa-user-shield"></i> Панель управления
+            </h2>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-user-cog"></i> Логин администратора
+                </label>
+                <input type="text" class="input-field" id="adminLogin" value="teacher">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-key"></i> Пароль
+                </label>
+                <input type="password" class="input-field" id="adminPassword" value="teacher123">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    <i class="fas fa-fingerprint"></i> Секретный ключ
+                </label>
+                <input type="password" class="input-field" id="adminSecret" value="leo2024">
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button class="login-btn" id="adminSubmit" style="background: linear-gradient(135deg, #9d4edd, #6366f1);">
+                    <i class="fas fa-unlock-alt"></i> Войти в админку
+                </button>
+                <button class="demo-btn" id="closeAdminPanel" style="background: rgba(255,65,108,0.2); color: #ff416c;">
+                    <i class="fas fa-times"></i> Отмена
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Уведомления -->
-    <div id="notification" class="notification">
+    <div id="notification" style="position: fixed; top: 30px; right: 30px; padding: 20px 30px; background: linear-gradient(135deg, #00ff88, #00ccff); color: #0f0c29; border-radius: 15px; display: flex; align-items: center; gap: 15px; font-weight: 600; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateX(150%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;">
         <i class="fas fa-check-circle"></i>
         <span>Сообщение</span>
     </div>
-
+    
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/main.js"></script>
+    <script>
+        // Конфигурация частиц
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 150, density: { enable: true, value_area: 800 } },
+                color: { value: ["#00ff88", "#00ccff", "#9d4edd", "#6366f1"] },
+                shape: { type: "circle" },
+                opacity: { value: 0.6, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
+                size: { value: 4, random: true, anim: { enable: true, speed: 2, size_min: 0.1 } },
+                line_linked: { 
+                    enable: true, 
+                    distance: 180, 
+                    color: "#ffffff", 
+                    opacity: 0.15, 
+                    width: 1 
+                },
+                move: { 
+                    enable: true, 
+                    speed: 3,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 6 }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // Логика входа
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Leo Assistant загружен!');
+            
+            // Функция уведомлений
+            function showNotification(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                const icon = notification.querySelector('i');
+                const text = notification.querySelector('span');
+                
+                switch(type) {
+                    case 'success':
+                        icon.className = 'fas fa-check-circle';
+                        notification.style.background = 'linear-gradient(135deg, #00ff88, #00ccff)';
+                        break;
+                    case 'error':
+                        icon.className = 'fas fa-exclamation-circle';
+                        notification.style.background = 'linear-gradient(135deg, #ff416c, #ff4b2b)';
+                        break;
+                    case 'warning':
+                        icon.className = 'fas fa-exclamation-triangle';
+                        notification.style.background = 'linear-gradient(135deg, #ff9e00, #ff5e62)';
+                        break;
+                    default:
+                        icon.className = 'fas fa-info-circle';
+                        notification.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                }
+                
+                text.textContent = message;
+                notification.style.transform = 'translateX(0)';
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(150%)';
+                }, 4000);
+            }
+            
+            // Обычный вход
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value.trim();
+                const userClass = document.getElementById('loginClass').value;
+                
+                if (!email || !password) {
+                    showNotification('Заполни все поля! 🌟', 'error');
+                    return;
+                }
+                
+                const submitBtn = document.getElementById('loginSubmit');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Запускаем двигатели...';
+                submitBtn.disabled = true;
+                
+                // Имитация загрузки
+                setTimeout(() => {
+                    const userData = {
+                        id: Date.now(),
+                        email: email,
+                        name: email.split('@')[0].replace('.', ' ').replace('-', ' '),
+                        class: userClass,
+                        role: 'student',
+                        avatar: Math.floor(Math.random() * 5) + 1,
+                        joinDate: new Date().toISOString(),
+                        flightPoints: 8425,
+                        level: 15,
+                        xp: 1250,
+                        xpMax: 2000,
+                        achievements: ['Первый полёт', 'Знаток математики', 'Активный ученик']
+                    };
+                    
+                    localStorage.setItem('leoUser', JSON.stringify(userData));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    showNotification(`Приветствуем, ${userData.name}! 🚀`, 'success');
+                    
+                    // Анимация перехода
+                    setTimeout(() => {
+                        document.body.style.opacity = '0.8';
+                        document.body.style.transform = 'scale(0.95)';
+                        document.body.style.transition = 'all 0.5s ease';
+                        
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 300);
+                    }, 800);
+                    
+                }, 1500);
+            });
+            
+            // Демо ученика
+            document.getElementById('demoStudent').addEventListener('click', function() {
+                document.getElementById('loginEmail').value = 'иван.ученик@7b-класс.рус';
+                document.getElementById('loginPassword').value = 'демо123';
+                document.getElementById('loginClass').value = '7b';
+                showNotification('Демо-режим ученика активирован! 📚', 'success');
+            });
+            
+            // Демо учителя
+            document.getElementById('demoTeacher').addEventListener('click', function() {
+                document.getElementById('loginEmail').value = 'учитель.мария@7b-класс.рус';
+                document.getElementById('loginPassword').value = 'учитель456';
+                document.getElementById('loginClass').value = '7b';
+                showNotification('Демо-режим учителя активирован! 🎓', 'success');
+            });
+            
+            // Показать админ-панель
+            document.getElementById('showAdminPanel').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('adminPanel').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Закрыть админ-панель
+            document.getElementById('closeAdminPanel').addEventListener('click', function() {
+                document.getElementById('adminPanel').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Вход в админку
+            document.getElementById('adminSubmit').addEventListener('click', function() {
+                const login = document.getElementById('adminLogin').value.trim();
+                const password = document.getElementById('adminPassword').value.trim();
+                const secret = document.getElementById('adminSecret').value.trim();
+                
+                if (login === 'teacher' && password === 'teacher123' && secret === 'leo2024') {
+                    const adminData = {
+                        login: login,
+                        role: 'admin',
+                        permissions: ['users', 'content', 'stats', 'ai', 'system'],
+                        lastLogin: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('leoAdmin', JSON.stringify(adminData));
+                    localStorage.setItem('isAdmin', 'true');
+                    
+                    showNotification('Панель управления загружается... ⚙️', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    showNotification('Неверные данные администратора 🔐', 'error');
+                }
+            });
+            
+            // Анимация частиц при клике
+            document.addEventListener('click', function(e) {
+                const particles = window.pJSDom[0].pJS.particles;
+                particles.array.forEach(p => {
+                    const dx = p.x - e.clientX;
+                    const dy = p.y - e.clientY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        p.vx = (dx / distance) * 5;
+                        p.vy = (dy / distance) * 5;
+                    }
+                });
+            });
+            
+            // Автозаполнение для теста
+            if (window.location.href.includes('debug')) {
+                document.getElementById('loginEmail').value = 'тест@7b-класс.рус';
+                document.getElementById('loginPassword').value = 'тест123';
+                showNotification('Режим отладки активирован 🐛', 'warning');
+            }
+        });
+    </script>
 </body>
 </html>
